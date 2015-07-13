@@ -6,14 +6,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0"/>
 	<title>@yield('title')</title>
-	{{--<link rel="shortcut icon" href="http://www.umayor.cl/favicon.ico"/>--}}
-	{{--<link rel="apple-touch-icon-precomposed" href="http://www.umayor.cl/favicon.ico">--}}
+	{{--<link rel = "shortcut icon" href = "http://www.umayor.cl/favicon.ico" />--}}
+	{{--<link rel = "apple-touch-icon-precomposed" href = "http://www.umayor.cl/favicon.ico" >--}}
 
 	{{ HTML::style('css/bootstrap.min.css') }}
-	{{ HTML::style('css/frontend.min.css') }}
+	{{ HTML::style('backend/css/bootstrap-paper.min.css') }}
+	{{ HTML::style('backend/css/backend.min.css') }}
 	{{ HTML::style('//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css') }}
-	{{ HTML::style('//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/css/bootstrapValidator.min.css') }}
-
+	{{ HTML::style('plugins/formvalidation/css/formValidation.min.css') }}
 	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -28,22 +28,22 @@
 	@yield('style')
 </head>
 <body>
-	<header class="container"></header>
+	<header class="container">
+		@yield('header')
+	</header>
 	<main class="container">
-		<section class="row">
-			@yield('content')
-		</section> @include('layouts.politicas_tmp')
+		@yield('content')
 	</main>
-	<div class="clearfix"></div>
 	<footer class="container">
-		<span>Copyright {{ Carbon::now()->year }} Intelidata©</span>
+		@yield('footer')
 	</footer>
 	<a href="#" id="go-top" role="button" title="Click para ir al comienzo!" data-toggle="tooltip" data-placement="left"><i class="fa fa-chevron-circle-up fa-3x"></i></a> {{ HTML::script('//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js') }}
 	{{ HTML::script('//code.jquery.com/jquery-1.11.0.min.js') }}
 	{{ HTML::script('js/bootstrap.min.js') }}
 	{{ HTML::script('js/jquery.rut.min.js') }}
-	{{ HTML::script('//cdnjs.cloudflare.com/ajax/libs/jquery.bootstrapvalidator/0.5.2/js/bootstrapValidator.min.js') }}
-	{{ HTML::script('js/admin.min.js') }}
+	{{ HTML::script('plugins/formvalidation/js/formValidation.min.js') }}
+	{{ HTML::script('plugins/formvalidation/js/framework/bootstrap.min.js') }}
+	{{ HTML::script('js/backend.min.js') }}
 	@yield('script')
 </body>
 </html>

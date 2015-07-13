@@ -1,9 +1,9 @@
 <?php
 
-class HomeController extends BaseController
+class HomeController extends \ApiController
 {
 
-	public function index($shorten = null)
+	public function index()
 	{
 	}
 

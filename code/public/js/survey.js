@@ -2,40 +2,40 @@
  * Created by Maze on 10-07-2015.
  */
 
-var $input_color = 'blue';
+var input_color = 'blue';
 
-switch ($color) {
+switch (color) {
     case 'rojo':
-        $input_color = 'red';
+        input_color = 'red';
         break;
     case 'verde':
-        $input_color = 'green';
+        input_color = 'green';
         break;
     case 'azul':
-        $input_color = 'blue';
+        input_color = 'blue';
         break;
     case 'gris':
-        $input_color = 'grey';
+        input_color = 'grey';
         break;
     case 'naranjo':
-        $input_color = 'orange';
+        input_color = 'orange';
         break;
     case 'amarillo':
-        $input_color = 'yellow';
+        input_color = 'yellow';
         break;
     case 'rosado':
-        $input_color = 'pink';
+        input_color = 'pink';
         break;
     case 'morado':
-        $input_color = 'purple';
+        input_color = 'purple';
         break;
     default:
-        $input_color = 'blue';
+        input_color = 'blue';
         break;
 }
 
 jq('input[type=radio]').iCheck({
-    radioClass: 'iradio_square-' + $input_color,
+    radioClass: 'iradio_square-' + input_color,
     increaseArea: '20%',
     labelHover: true,
     cursor: true
@@ -48,7 +48,7 @@ jq('input[type=radio]').iCheck({
 });
 
 jq('input[type=checkbox]').iCheck({
-    checkboxClass: 'icheckbox_square-' + $input_color,
+    checkboxClass: 'icheckbox_square-' + input_color,
     increaseArea: '20%',
     labelHover: true,
     cursor: true
@@ -72,13 +72,13 @@ jq('#gender').select2().change(function (e) {
 });
 
 jq('.table td').hover(function () {
-        jq(this).find('.iradio_square-' + $input_color).addClass('hover');
+        jq(this).find('.iradio_square-' + input_color).addClass('hover');
     }, function () {
-        jq(this).find('.iradio_square-' + $input_color).removeClass("hover");
+        jq(this).find('.iradio_square-' + input_color).removeClass("hover");
     }
 ).click(function (event) {
         event.preventDefault();
-        jq(this).find('.iradio_square-' + $input_color).iCheck('toggle');
+        jq(this).find('.iradio_square-' + input_color).iCheck('toggle');
     });
 
 
@@ -91,13 +91,6 @@ jq('#surveyForm').formValidation({
     err: {
         clazz: 'help-block2',
         container: function ($field, validator) {
-            //  Look at the markup
-            //  <div class="col-xs-4">
-            //      <field>
-            //  </div>
-            //  <div class="col-xs-5 messageContainer"></div>
-            //  console.log($field);
-            //  console.log(validator);
             return $field.parents('.form-group').next('.messageContainer');
         }
     }

@@ -8,22 +8,22 @@ use Illuminate\Auth\UserTrait;
 /**
  * Cliente
  *
- * @property integer $id_cliente 
- * @property string $rut_cliente 
- * @property string $nombre_cliente 
- * @property string $fono_cliente 
- * @property string $correo_cliente 
- * @property string $direccion_cliente 
- * @property integer $id_estado 
- * @property integer $id_ciudad 
- * @property integer $id_tipo_cliente 
- * @property integer $id_sector 
- * @property integer $id_plan 
- * @property \Carbon\Carbon $created_at 
- * @property \Carbon\Carbon $updated_at 
- * @property-read \Illuminate\Database\Eloquent\Collection|\Apariencia[] $apariencias 
- * @property-read \Sector $sector 
- * @property-read \Illuminate\Database\Eloquent\Collection|\Respuesta[] $respuestas 
+ * @property integer                                                     $id_cliente
+ * @property string                                                      $rut_cliente
+ * @property string                                                      $nombre_cliente
+ * @property string                                                      $fono_cliente
+ * @property string                                                      $correo_cliente
+ * @property string                                                      $direccion_cliente
+ * @property integer                                                     $id_estado
+ * @property integer                                                     $id_ciudad
+ * @property integer                                                     $id_tipo_cliente
+ * @property integer                                                     $id_sector
+ * @property integer                                                     $id_plan
+ * @property \Carbon\Carbon                                              $created_at
+ * @property \Carbon\Carbon                                              $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Apariencia[] $apariencias
+ * @property-read \Sector                                                $sector
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Respuesta[]  $respuestas
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereIdCliente($value)
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereRutCliente($value)
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereNombreCliente($value)
@@ -82,6 +82,11 @@ class Cliente extends \Eloquent implements UserInterface, RemindableInterface
 		return $this->belongsTo('Sector', 'id_sector');
 	}
 
+	public function plan()
+	{
+		return $this->belongsTo('Plan', 'id_plan');
+	}
+
 	public function respuestas()
 	{
 		return $this->belongsToMany('Respuesta', 'cliente_respuesta', 'id_cliente', 'id_respuesta');
@@ -90,4 +95,5 @@ class Cliente extends \Eloquent implements UserInterface, RemindableInterface
 	public function preguntas()
 	{
 		return $this->hasManyThrough('Sector', 'Encuesta', 'id_sector', 'id_encuesta');
-	}}
+	}
+}

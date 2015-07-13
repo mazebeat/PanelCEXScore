@@ -1,4 +1,4 @@
-@extends('layouts.politicas')
+@extends('layouts.user')
 
 @section('style')
 	@if(isset($theme))
@@ -8,6 +8,7 @@
 		.incentive img {
 			margin-bottom: 10px;
 		}
+
 		.aqui {
 			color: #ffffff;
 		}
@@ -77,18 +78,8 @@
 	</div>
 @stop
 
-
 @section('footer')
-	<section class="row">
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<div class="text-center politicas">
-				<small>Desarrollado por CustomerTrigger S.A. ©Todos los Derechos Reservados {{ Carbon::now()->year  }} Privacidad y Uso de la Información<br>
-					<a href="{{ URL::to('politicas') }}">Privacidad y Uso de la Información</a></span><br>
-					<a href="http://www.customertrigger.com" class="">www.CustomerTrigger.com</a> | +562 2219 8993 | Fanor Velasco 85, Piso 9, Santiago de Chile
-				</small>
-			</div>
-		</div>
-	</section>
+	@include('survey.footer')
 @endsection
 
 @section('script')

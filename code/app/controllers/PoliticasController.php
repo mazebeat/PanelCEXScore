@@ -1,30 +1,35 @@
 <?php
 
-class PoliticasController extends \BaseController
+use SebastianBergmann\Exporter\Exception;
+
+class PoliticasController extends \ApiController
 {
 
 	public function __construct()
 	{
-		//$this->beforeFilter('auth');
+		parent::__construct();
 		$this->beforeFilter('csrf');
 	}
 
+	/**
+	 * @return mixed
+	 */
 	public function index()
 	{
-		$theme = null;
-		if (Session::has('theme')) {
-			$theme = Session::get('theme');
+		try {
+			$theme = null;
+			if (Session::has('theme')) {
+				$theme = Session::get('theme');
+			}
+
+			$survey = null;
+			if (Session::has('survey')) {
+				$survey = Session::get('survey');
+			}
+
+			return View::make('survey.politicas')->withTheme($theme)->withSurvey($survey);
+		} catch (Exception $e) {
+			static::throwError($e);
 		}
-
-		$survey = null;
-		if (Session::has('survey')) {
-			$survey = Session::get('survey');
-		}
-
-		//dd($survey);
-		//dd(Session::all());
-
-
-		return View::make('politicas')->withTheme($theme)->withSurvey($survey);
 	}
 }

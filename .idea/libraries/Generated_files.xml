@@ -69,7 +69,7 @@
       <root url="file://$PROJECT_DIR$/code/public/plugins/bootstrap-3.3.5-dist/js/npm.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/js/bootstrap.min.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/plugins/bootstrap-3.3.5-dist/js/bootstrap.min.js" />
-      <root url="file://$PROJECT_DIR$/code/public/js/admin.min.js" />
+      <root url="file://$PROJECT_DIR$/code/public/js/backend.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/plugins/bootstrap-3.3.5-dist/js/npm.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/js/survey.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/js/frontend.min.js" />

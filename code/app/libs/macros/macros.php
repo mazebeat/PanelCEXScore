@@ -68,9 +68,6 @@ Str::macro('hes', function ($str) {
 		$list .= "<option value='$key'>$value</option>";
 	}
 
-	//		Tools::printr($options);
-	//		die();
-
 	$options = \HTML::attributes($options);
 	unset($range);
 
@@ -174,7 +171,13 @@ Str::macro('hes', function ($str) {
 	foreach ($messages as $value) {
 		$message .= $value . ' <br>';
 	}
-	$script = '<script type = "text/javascript"> setTimeout(function () { jq(".errors") . removeClass("in"); jq(".errors") . slideToggle("slow"); }, 10000)</script> ';
+	$script = '<script type="text/javascript">
+				setTimeout(function () {
+					jq(".errors").hide(2000, function() {
+							jq(this).remove();
+						});
+					}, 10000);
+				</script> ';
 
 	return '<div class="errors alert alert-' . $type . '"><h5><strong> ' . Str::hes($head) . '</strong></h5>' . Str::hes($message) . '</div>' . $script;
 });
@@ -188,7 +191,7 @@ Str::macro('hes', function ($str) {
 	                    'data-fv-notempty',
 	                    'data-fv-notempty-message' => Lang::get('validation.required', ['attribute' => '']));
 
-	Debugbar::addMessage('RESPONSIVEOPTION | ID PREGUNTA: ' . $question->id_pregunta_cabecera . ' NUMERO PREGUNTA: ' . $question->numero_pregunta);
+	//Debugbar::addMessage('RESPONSIVEOPTION | ID PREGUNTA: ' . $question->id_pregunta_cabecera . ' NUMERO PREGUNTA: ' . $question->numero_pregunta);
 
 	return '<div class="form-group table-responsive hidden-md hidden-lg">
 				<table class="table table-hover table-condensed">
@@ -203,7 +206,7 @@ Str::macro('hes', function ($str) {
 							<td class="text-left vertical-align">
 								<label class="control-label">' . $text . '</label>
 							</td>
-							<td class="">' . \Form::selectRange2('pregunta_' . $question->numero_pregunta . '_' . $question->id_pregunta_cabecera . '[value]', '1', $max, null, $responsive) . '</td>
+							<td class="">' . \Form::selectRange2('question_' . $question->numero_pregunta . '_' . $question->id_pregunta_cabecera . '[value]', '1', $max, null, $responsive) . '</td>
 						</tr>
 					</tbody>
 				</table>
@@ -229,7 +232,7 @@ Str::macro('hes', function ($str) {
 		$out .= '<h4>' . Str::hes($numero_pregunta . '.- ' . $question->descripcion_1) . '</h4>';
 	}
 
-	Debugbar::addMessage('MULTIOPTIONS | ID PREGUNTA: ' . $id_pregunta_padre . ' NUMERO PREGUNTA: ' . $numero_pregunta);
+	//Debugbar::addMessage('MULTIOPTIONS | ID PREGUNTA: ' . $id_pregunta_padre . ' NUMERO PREGUNTA: ' . $numero_pregunta);
 
 	return $out;
 });
@@ -254,7 +257,7 @@ Str::macro('hes', function ($str) {
 		$out .= '<h4>' . Str::hes($numero_pregunta . '.- ' . $question->descripcion_1) . '</h4>';
 	}
 
-	Debugbar::addMessage('SINGLEOPTIONS | ID PREGUNTA: ' . $id_pregunta_padre . ' NUMERO PREGUNTA: ' . $numero_pregunta);
+	//Debugbar::addMessage('SINGLEOPTIONS | ID PREGUNTA: ' . $id_pregunta_padre . ' NUMERO PREGUNTA: ' . $numero_pregunta);
 
 	if (isset($max) && $max > 0) {
 		$out .= \HTML::responsiveOpt($question, $max, $isSubQuestion);
@@ -344,7 +347,7 @@ Str::macro('hes', function ($str) {
 		$out .= '<h4>' . Str::hes($numero_pregunta . '.- ' . $question->descripcion_1) . '</h4>';
 	}
 
-	Debugbar::addMessage('TEXTOPTION | ID PREGUNTA: ' . $id_pregunta_padre . ' NUMERO PREGUNTA: ' . $numero_pregunta);
+	//Debugbar::addMessage('TEXTOPTION | ID PREGUNTA: ' . $id_pregunta_padre . ' NUMERO PREGUNTA: ' . $numero_pregunta);
 
 	$out .= '<div class="form-group">';
 
@@ -410,7 +413,7 @@ Str::macro('hes', function ($str) {
 		$out .= '<h4>' . Str::hes($numero_pregunta . '.- ' . $question->descripcion_1) . '</h4>';
 	}
 
-	Debugbar::addMessage('BOOLEANOPTION | ID PREGUNTA: ' . $id_pregunta_padre . ' NUMERO PREGUNTA: ' . $numero_pregunta);
+	//Debugbar::addMessage('BOOLEANOPTION | ID PREGUNTA: ' . $id_pregunta_padre . ' NUMERO PREGUNTA: ' . $numero_pregunta);
 
 	$out .= '<div class="form-group table-responsive">
 				<table class="table table-hover table-condensed">
@@ -424,8 +427,8 @@ Str::macro('hes', function ($str) {
 					<tbody class=" text-center">
 					<tr class="">
 						<td style="width: 33%;" class="text-left vertical-align"><label class="control-label">' . Str::hes('Opción') . '</label></td>
-						<td style="width: 33%;"><input type="radio" name="question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[value]" value="2" data-fv-notempty data-fv-notempty-message="' . Lang::get('validation.required', ['attribute' => '']) . '"></td>
-						<td style="width: 33%;"><input type="radio" name="question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[value]" value="1"></td>
+						<td style="width: 33%;"><input type="radio" name="question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[text]" value="SI" data-fv-notempty data-fv-notempty-message="' . Lang::get('validation.required', ['attribute' => '']) . '"></td>
+						<td style="width: 33%;"><input type="radio" name="question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[text]" value="NO"></td>
 					</tr>
 					</tbody>
 				</table>';

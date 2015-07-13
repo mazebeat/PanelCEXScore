@@ -1,27 +1,48 @@
 <?php
 
-class ExcepcionesController extends \BaseController
+use MyProject\Proxies\__CG__\stdClass;
+
+class ExcepcionesController extends \ApiController
 {
 
 	public function __construct()
 	{
-		//$this->beforeFilter('auth');
+		parent::__construct();
 		$this->beforeFilter('csrf');
 	}
 
+	/**
+	 * @return \Illuminate\Http\RedirectResponse|string
+	 */
 	public function add()
 	{
-		$e               = new ExcepcionesCliente();
-		$e->fecha        = Carbon::now();
-		$e->id_cliente   = Auth::user()->id_cliente;
-		$e->id_excepcion = 1;
-		if($e->save()) {
-			Session::flush();
-			if(Request::ajax()) {
-				return 'OK';
-			}
-		}
+		try {
+			if (Session::has('idcliente')) {
+				$exception               = new ExcepcionUsuario();
+				$exception->id_usuario   = Crypt::decrypt(Session::get('idcliente'));
+				$exception->id_excepcion = 1;
 
-		return Redirect::to('http://www.umayor.cl');
+				if ($exception->save()) {
+					Session::flush();
+					if (Request::ajax()) {
+						return 'OK';
+					}
+				}
+
+				$message        = new stdClass();
+				$message->title = 'Tú solicitud ha sido registrada, Gracias por tu Tiempo.';
+
+				return Redirect::to('survey/success')->withMessage($message);
+			}
+
+			$error          = new stdClass();
+			$error->code    = 401;
+			$error->message = 'Cliente no encontrado.';
+
+			return View::make('survey.error')->withError($error);
+
+		} catch (Exception $e) {
+			static::throwError($e);
+		}
 	}
 }

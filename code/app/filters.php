@@ -11,6 +11,8 @@
 |
 */
 
+use MyProject\Proxies\__CG__\stdClass;
+
 App::before(function ($request) {
 	//
 });
@@ -20,9 +22,6 @@ App::after(function ($request, $response) {
 	if (!Config::get('app.debug')) {
 		if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') || strpos($_SERVER['HTTP_USER_AGENT'], 'Safari')) {
 			$response->header('P3P', 'CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
-			//		header('P3P: CP="IDC DSP COR CURa ADMa OUR IND PHY ONL COM STA"');
-			//		header('P3P: CP="CAO PSA OUR"');
-			//
 		}
 	}
 });
@@ -44,13 +43,17 @@ Route::filter('auth', function () {
 			return Response::make('Unauthorized', 401);
 		}
 		else {
-			//			return Redirect::guest('login');
-			$msg = array('data'    => array('type'  => 'danger',
-			                                'title' => 'Atención',
-			                                'text'  => 'Usuario no logueado'),
-			             'options' => array('left' => HTML::link(URL::to('/'), 'Salir', array('class' => 'col-md-3 btn btn-default btn-lg pull-right text-uppercase'))));
+			//			return Redirect::guest('admin/login');
+			//$msg = array('data'    => array('type'  => 'danger',
+			//                                'title' => 'Atención',
+			//                                'text'  => 'Usuario no logueado'),
+			//             'options' => array('left' => HTML::link(URL::to('/'), 'Salir', array('class' => 'col-md-3 btn btn-default btn-lg pull-right text-uppercase'))));
 
-			return View::make('messages', compact('msg'));
+			$message           = new stdClass();
+			$message->title    = 'Atención';
+			$message->subtitle = 'Usuario no logueado';
+
+			return View::make('survey.messages')->withMessage($message);
 		}
 	}
 });
@@ -72,7 +75,7 @@ Route::filter('auth.basic', function () {
 
 Route::filter('guest', function () {
 	if (Auth::check()) {
-		return Redirect::to('/');
+		return Redirect::to('admin/login');
 	}
 });
 

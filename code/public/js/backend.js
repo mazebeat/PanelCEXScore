@@ -1,5 +1,6 @@
-$('#login_form').bootstrapValidator({
-    excluded: [':disabled', ':hidden', ':not(:visible)'],
+var jq = jQuery.noConflict();
+
+jq('#loginForm').formValidation({
     fields: {
         rut: {
             message: 'El RUT no es valido',
@@ -9,7 +10,7 @@ $('#login_form').bootstrapValidator({
                 },
                 callback: {
                     callback: function (value, validator) {
-                        return $.validateRut(value);
+                        return jq.validateRut(value);
                     },
                     message: 'El campo RUT es incorrecto'
                 },

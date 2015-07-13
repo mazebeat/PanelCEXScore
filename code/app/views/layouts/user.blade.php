@@ -40,10 +40,10 @@
     @yield('style')
 </head>
 <body>
-	<header class="container-fluid user">
+	<header class="container user">
 		@yield('header')
 	</header>
-	<main class="container-fluid user">
+	<main class="container user">
 		@yield('content')
 	</main>
 	<footer class="container user">

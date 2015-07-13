@@ -5,11 +5,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name = "viewport" content = "width=device-width, minimum-scale=1.0, maximum-scale=1.0" />
-
-	<title>{{{ $title or 'Encuesta Universidad Mayor' }}}</title>
-
-	<link rel = "shortcut icon" href = "http://www.umayor.cl/favicon.ico" />
-	<link rel = "apple-touch-icon-precomposed" href = "http://www.umayor.cl/favicon.ico" >
+	<title>@yield('title')</title>
+	{{--<link rel = "shortcut icon" href = "http://www.umayor.cl/favicon.ico" />--}}
+	{{--<link rel = "apple-touch-icon-precomposed" href = "http://www.umayor.cl/favicon.ico" >--}}
 
 	{{ HTML::style('css/bootstrap.min.css') }}
 	{{ HTML::style('css/frontend.min.css') }}
@@ -33,10 +31,6 @@
 			@yield('content')
 		</div>
 	</div>
-	@if(Session::has('user_id'))
-		@include('layouts.politicas_tmp')
-	@endif
-	<div class="clearfix"></div>
 	<a href="#" id="go-top" role="button" title="Click para ir al comienzo!" data-toggle="tooltip" data-placement="left"><i class="fa fa-chevron-circle-up fa-3x"></i></a>
 	{{ HTML::script('//code.jquery.com/jquery-1.11.0.min.js') }}
 	{{ HTML::script('js/bootstrap.min.js') }}

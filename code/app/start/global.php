@@ -61,34 +61,33 @@ Log::useFiles(storage_path() . '/logs/panel_exscore.log');
 if(!Config::get('app.debug')) {
 	App::error(function (Exception $exception, $code) {
 		Log::error($exception);
-
 		switch($code) {
 			case 401:
-				return Response::view('errors', array(
+				return Response::view('survey.errors', array(
 					'code'      => $code,
 					'exception' => $exception
 				), 403);
 
 			case 403:
-				return Response::view('errors', array(
+				return Response::view('survey.errors', array(
 					'code'      => $code,
 					'exception' => $exception
 				), 403);
 
 			case 404:
-				return Response::view('errors', array(
+				return Response::view('survey.errors', array(
 					'code'      => $code,
 					'exception' => $exception
 				), 404);
 
 			case 500:
-				return Response::view('errors', array(
+				return Response::view('survey.errors', array(
 					'code'      => $code,
 					'exception' => $exception
 				), 500);
 
 			default:
-				return Response::view('errors', array(
+				return Response::view('survey.errors', array(
 					'code'      => $code,
 					'exception' => $exception
 				), $code);

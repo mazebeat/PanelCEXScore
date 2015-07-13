@@ -1,77 +1,115 @@
 <?php
 
-class EncuestasController extends \BaseController
+use Illuminate\Support\Facades\Redirect;
+use SebastianBergmann\Exporter\Exception;
+
+class EncuestasController extends \ApiController
 {
 	public function __construct()
 	{
+		parent::__construct();
 		$this->beforeFilter('csrf');
 	}
 
+	/**
+	 * @param null $idcliente
+	 * @param null $canal
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function index($idcliente = null, $canal = null)
 	{
+		if (Cache::get('finish')) {
+			return Redirect::to('survey/success');
+		}
+
 		if (isset($idcliente) && isset($canal)) {
 
-			if (Auth::check() && Session::has('canal') && Session::has('theme') && Session::has('survey')) {
-				return View::make('encuesta')->withTheme(Session::get('theme'))->withSurvey(Session::get('survey'));
-			}
-
-			if (Session::has('canal')) {
-				Session::forget('canal');
-			}
-
-			$canal = Canal::whereCodigoCanal(Crypt::decrypt($canal))->first(array('id_canal'));
-			if (isset($canal) && $canal->exists) {
-				Session::put('canal', Crypt::encrypt($canal->id_canal));
-			}
+			//if (Session::has('idcliente') && Session::has('canal') && Session::has('theme') && Session::has('survey')) {
+			//	return View::make('survey.encuesta')->withTheme(Session::get('theme'))->withSurvey(Session::get('survey'));
+			//}
 
 			try {
+				if (Session::has('canal')) {
+					Session::forget('canal');
+				}
+
+				$canal = Canal::whereCodigoCanal(Crypt::decrypt($canal))->first(array('id_canal'));
+
+				if (isset($canal) && $canal->exists) {
+					Session::put('canal', Crypt::encrypt($canal->id_canal));
+				}
+				else {
+					$error          = new stdClass();
+					$error->code    = 500;
+					$error->message = 'Canala no encontrado.';
+
+					return Redirect::to('survey/error')->with('error', $error);
+				}
+
 				$id     = Crypt::decrypt($idcliente);
 				$client = Cliente::find($id);
 
 				if ($client->first()->exists) {
 
-					Auth::loginUsingId($id);
+					$plan = $client->plan;
 
-					$survey = $client->sector->encuestas->first();
-					$theme  = $client->apariencias->first();
+					if (!is_null($plan)) {
 
-					if (!(isset($theme) && $theme->exists)) {
-						$theme = Apariencia::find(1);
+						if ($plan->id_plan == 1) {
+							$theme  = Apariencia::find(1);
+							$survey = Encuesta::find(1);
+						}
+						else {
+							$survey = $client->sector->encuestas->first();
+							$theme  = $client->apariencias->first();
+						}
+
+						if (!is_null($theme) && $theme->exists) {
+							$theme = Apariencia::find(1);
+						}
+
+						if (!Session::has('theme')) {
+							Session::put('theme', $theme);
+						}
+
+						if (!Session::has('survey')) {
+							Session::put('survey', $survey);
+						}
+
+						if (!Session::has('idcliente')) {
+							Session::put('idcliente', $idcliente);
+						}
 					}
 
-					if (!Session::has('theme')) {
-						Session::put('theme', $theme);
-					}
-
-					if (!Session::has('survey')) {
-						Session::put('survey', $survey);
-					}
-
-					if (!Session::has('idcliente')) {
-						Session::put('idcliente', $idcliente);
-					}
-
-					//dd(Session::all());
-
-					return View::make('encuesta')->withTheme($theme)->withSurvey($survey);
+					return View::make('survey.encuesta')->withTheme($theme)->withSurvey($survey);
 				}
 
-				var_dump('Not found client');
+				//var_dump('Not found client');
 
 			} catch (Exception $e) {
-				var_dump($e->getMessage());
+				$error          = new stdClass();
+				$error->code    = $e->getCode();
+				$error->message = $e->getMessage();
+
+				return Redirect::to('survey/error')->with('error', $error);
 			}
 		}
 
 		return Redirect::to('survey/error');
 	}
 
+	/**
+	 * @return $this|\Illuminate\Http\RedirectResponse
+	 */
 	public function store()
 	{
 		$inputs = Input::except('_token');
 
-		if (!Auth::check()) {
-			return Redirect::to('/' . Session::get('shorten'));
+		if (!Session::has('idcliente')) {
+			$errors = 'Cliente no identificado.';
+
+			return Redirect::back()->withErrors($errors)->withInput($inputs);
 		}
 
 		if (!static::validateAnswers($inputs)) {
@@ -80,89 +118,59 @@ class EncuestasController extends \BaseController
 			return Redirect::back()->withErrors($errors)->withInput($inputs);
 		}
 
-		$answers = static::processAnswers($inputs);
+		$data = static::processAnswers($inputs);
 
-		if (!isset($answers)) {
+		if (is_null($data) && !static::objectHasProperty($data['answers'])) {
 			$errors = 'Error en la consulta.';
 
 			return Redirect::back()->withErrors($errors)->withInput($inputs);
 		}
 
-		$cr                   = new ClienteRespuesta();
-		$cr->id_cliente       = Auth::id();
-		$cr->ultima_respuesta = Carbon::now();
-		$cr->id_estado        = 15;
+		$id_cliente = Crypt::decrypt(Session::get('idcliente'));
+		$client     = Cliente::find($id_cliente);
+		$survey     = Session::get('survey');
 
-		//$id_cliente = Crypt::decrypt(Session::get('idcliente');
-		//$id_cliente = Crypt::decrypt(Auth::id());
-		//$client = Cliente::find($id_cliente);
+		foreach ($data['answers'] as $key => $value) {
+			$respuesta                       = new Respuesta();
+			$respuesta->id_estado            = 1;
+			$respuesta->id_canal             = Crypt::decrypt(Session::get('canal'));
+			$respuesta->id_encuesta          = $survey->id_encuesta;
+			$respuesta->id_pregunta_cabecera = $value->id_pregunta_cabecera;
+			//$respuesta->id_pregunta_detalle  = 1;
 
-		//$client->respuestas()->attach($id_respuesta, array('ultima_respuesta' => Carbon::now(), 'id_estado' => 15));
+			$respuesta = $client->respuestas()->save($respuesta, ['ultima_respuesta' => Carbon::now(), 'id_estado' => 1]);
 
-
-		if (!is_null($cli_resp)) {
-			$respuesta_detalle = array();
-
-			foreach ($inputs as $key => $value) {
-				if ($key != '_token') {
-					$data = array('fecha'                => Carbon::now(),
-					              'id_estado'            => '6',
-					              'id_canal'             => Session::get('canal'),
-					              'id_encuesta'          => Session::get('encuesta', 1),
-					              'id_pregunta'          => (int)str_replace('pregunta_', '', $key),
-					              'id_pregunta_detalle'  => 1,
-					              'id_cliente'           => Auth::user()->id_cliente,
-					              'id_cliente_respuesta' => $cli_resp,
-					              'created_at'           => Carbon::now());
-
-					$respuesta = Respuesta::insertGetId($data);
-
-					if (!is_null($respuesta)) {
-						$val  = array_get($value, 'value');
-						$text = array_get($value, 'text');
-						array_push($respuesta_detalle, array('valor1'       => trim($val) != '' ? $val : null,
-						                                     'valor2'       => trim($text) != '' && Str::length($text) > 0 ? $text : null,
-						                                     'id_respuesta' => $respuesta,
-						                                     'created_at'   => Carbon::now()));
-					}
-					else {
-						$msg = array('data' => array('type' => 'danger',
-						                             'text' => 'Error al enviar el formulario'));
-
-						return Redirect::back()->with('msg', $msg)->withInput($inputs);
-					}
-				}
+			$respuestaDetalle = new RespuestaDetalle();
+			if (isset($value->value)) {
+				$respuestaDetalle->valor1 = $value->value;
 			}
-		}
-
-		unset($resp_d);
-		unset($resp);
-		unset($inputs);
-		unset($answers);
-
-		if (RespuestaDetalle::insert($respuesta_detalle)) {
-			$theme = null;
-			if (Session::has('theme')) {
-				$theme = Session::get('theme');
+			else {
+				$respuestaDetalle->valor1 = null;
 			}
-
-			Session::flush();
-			$msg    = array('data' => array('type' => 'success',
-			                                'text' => '<i class="fa fa-check fa-fw"></i>Gracias por tu tiempo y disponibilidad en responder, ¡Tu opinión es muy importante!'));
-			$script = "setTimeout('window.location.href=\"" . URL::to('/') . "/\";', 5000); if (typeof window.event == 'undefined'){ document.onkeypress = function(e){ var test_var=e.target.nodeName.toUpperCase(); if (e.target.type) var test_type=e.target.type.toUpperCase(); if ((test_var == 'INPUT' && test_type == 'TEXT') || test_var == 'TEXTAREA'){ return e.keyCode; }else if (e.keyCode == 8 || e.keyCode == 116 || e.keyCode == 122){ e.preventDefault(); } } }else{ document.onkeydown = function(){ var test_var=event.srcElement.tagName.toUpperCase(); if (event.srcElement.type) var test_type=event.srcElement.type.toUpperCase(); if ((test_var == 'INPUT' && test_type == 'TEXT') || test_var == 'TEXTAREA'){ return event.keyCode; } else if (event.keyCode == 8 || e.keyCode == 116 || e.keyCode == 122){ event.returnValue=false; } } } ";
-
-
-			Auth::logout();
-			Session::flush();
-
-			return View::make('messages')->withMsg($msg)->withScript($script)->withTheme($theme);
+			if (isset($value->text)) {
+				$respuestaDetalle->valor2 = $value->text;
+			}
+			else {
+				$respuestaDetalle->valor2 = null;
+			}
+			$respuestaDetalle->id_respuesta = $respuesta->id_respuesta;
+			$respuestaDetalle->save();
 		}
-		else {
-			$msg = array('data' => array('type' => 'danger',
-			                             'text' => 'Error al enviar el formulario'));
-
-			return Redirect::back()->with('msg', $msg)->withInput(Input::all());
+		if (count($data['user']) && static::objectHasProperty($data['user'])) {
+			$value                = $data['user'];
+			$user                 = new Usuario();
+			$user->nombre_usuario = $value->name;
+			$user->edad_usuario   = $value->age;
+			$user->genero_cliente = $value->gender;
+			$user->correo_cliente = $value->email;
+			//$user->id_tipo_cliente = null;
+			if (isset($value->wish_email) && (int)$value->wish_email == 1) {
+				$user->desea_correo_cliente = 'NO';
+			}
+			$user->save();
 		}
+
+		return Redirect::to('survey/success');
 	}
 
 	/**
@@ -172,20 +180,24 @@ class EncuestasController extends \BaseController
 	 */
 	public static function validateAnswers(array $inputs)
 	{
-		if (!is_array($inputs)) {
-			return false;
-		}
-
-		$count = 0;
-
-		foreach ($inputs as $key => $value) {
-			if (Str::startsWith($key, 'question')) {
-				$count++;
+		try {
+			if (!is_array($inputs)) {
+				return false;
 			}
-		}
 
-		if ($count === 4) {
-			return true;
+			$count = 0;
+
+			foreach ($inputs as $key => $value) {
+				if (Str::startsWith($key, 'question')) {
+					$count++;
+				}
+			}
+
+			if ($count === 4) {
+				return true;
+			}
+		} catch (Exception $e) {
+			static::throwError($e);
 		}
 
 		return false;
@@ -198,51 +210,62 @@ class EncuestasController extends \BaseController
 	 */
 	public static function processAnswers(array $inputs)
 	{
-		if (!is_array($inputs)) {
-			return null;
+		try {
+			if (!is_array($inputs)) {
+				return null;
+			}
+
+			return static::processKeyAnswer($inputs);
+		} catch (Exception $e) {
+			static::throwError($e);
 		}
 
-		return static::processKeyAnswer($inputs);
+		return null;
 	}
 
 	/**
 	 * @param array $inputs
 	 *
-	 * @return \stdClass
+	 * @return array
 	 */
 	public static function processKeyAnswer(array $inputs)
 	{
 		$answers = new stdClass();
+		$user    = new stdClass();
 
-		foreach ($inputs as $key => $value) {
+		try {
+			foreach ($inputs as $key => $value) {
 
-			if (Str::startsWith($key, 'question')) {
-				$split = explode('_', $key);
-				$name  = $split[0] . $split[1];
+				if (Str::startsWith($key, 'question')) {
+					$split = explode('_', $key);
+					$name  = $split[0] . $split[1];
 
-				$tmp = array('id_pregunta_cabecera' => (int)$split[2]);
+					$tmp = array('id_pregunta_cabecera' => (int)$split[2]);
 
-				if (is_array($value)) {
-					foreach ($value as $k => $v) {
-						if ($k == 'value') {
-							$tmp[$k] = (int)$v;
-						}
-						else {
-							$tmp[$k] = $v;
+					if (is_array($value)) {
+						foreach ($value as $k => $v) {
+							if ($k == 'value' && !is_null($v)) {
+								$tmp[$k] = (int)$v;
+							}
+							else {
+								$tmp[$k] = $v;
+							}
 						}
 					}
-				}
 
-				$answers->$name = (object)$tmp;
-			}
-			else {
-				if ($value == null || empty($value)) {
-					$value = null;
+					$answers->$name = (object)$tmp;
 				}
-				$answers->$key = $value;
+				else {
+					if ($value == null || empty($value)) {
+						$value = null;
+					}
+					$user->$key = $value;
+				}
 			}
+		} catch (Exception $e) {
+			static::throwError($e);
 		}
 
-		return $answers;
+		return ['answers' => $answers, 'user' => $user];
 	}
 }
