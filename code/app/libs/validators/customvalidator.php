@@ -14,10 +14,8 @@ class CustomValidator extends IlluminateValidator
 	/**
 	 * @var array
 	 */
-	private $_custom_messages = array(
-		"rut"       => "El :attribute no es correcto.",
-		"exist_rut" => "Usuario no registrado.",
-	);
+	private $_custom_messages = array("rut"       => "El :attribute no es correcto.",
+	                                  "exist_rut" => "Usuario no registrado.",);
 
 	/**
 	 * @param \Symfony\Component\Translation\TranslatorInterface $translator
@@ -56,7 +54,7 @@ class CustomValidator extends IlluminateValidator
 			Rut::$use_exceptions = false;
 
 			return Rut::isValid($value);
-		} catch(InvalidFormatException $e) {
+		} catch (InvalidFormatException $e) {
 			return false;
 		}
 	}
@@ -70,8 +68,13 @@ class CustomValidator extends IlluminateValidator
 	 */
 	public static function validateExistRut($attribute, $value, $parameters)
 	{
-		$alumn = new BddUmayor();
 
-		return $alumn->existRut($value);
+		$client = Cliente::whereRutCliente($value)->first();
+
+		if (!is_null($client) && $client->exists) {
+			return true;
+		}
+
+		return false;
 	}
 }
