@@ -2,11 +2,9 @@
   <library name="Generated files" type="javaScript">
     <properties>
       <sourceFilesUrls>
-        <item url="file://$PROJECT_DIR$/code/public/js/admin.min.js" />
-        <item url="file://$PROJECT_DIR$/code/public/plugins/bootstrap-3.3.5-dist/js/npm.min.js" />
+        <item url="file://$PROJECT_DIR$/code/public/js/backend.min.js" />
         <item url="file://$PROJECT_DIR$/code/public/js/survey.min.js" />
         <item url="file://$PROJECT_DIR$/code/public/js/frontend.min.js" />
-        <item url="file://$PROJECT_DIR$/code/public/js/bootstrap.min.min.js" />
         <item url="file://$PROJECT_DIR$/code/public/js/select2_locale_es.min.js" />
         <item url="file://$PROJECT_DIR$/code/public/js/npm.min.min.js" />
         <item url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/zh_CN.min.js" />
@@ -23,7 +21,6 @@
         <item url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/sq_AL.min.js" />
         <item url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/hu_HU.min.js" />
         <item url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/ro_RO.min.js" />
-        <item url="file://$PROJECT_DIR$/code/public/plugins/bootstrap-3.3.5-dist/js/bootstrap.min.js" />
         <item url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/it_IT.min.js" />
         <item url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/pt_BR.min.js" />
         <item url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/nl_NL.min.js" />
@@ -69,11 +66,12 @@
       <root url="file://$PROJECT_DIR$/code/public/plugins/bootstrap-3.3.5-dist/js/npm.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/js/bootstrap.min.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/plugins/bootstrap-3.3.5-dist/js/bootstrap.min.js" />
-      <root url="file://$PROJECT_DIR$/code/public/js/backend.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/plugins/bootstrap-3.3.5-dist/js/npm.min.js" />
+      <root url="file://$PROJECT_DIR$/code/public/js/bootstrap.min.min.js" />
+      <root url="file://$PROJECT_DIR$/code/public/plugins/bootstrap-3.3.5-dist/js/bootstrap.min.js" />
+      <root url="file://$PROJECT_DIR$/code/public/js/backend.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/js/survey.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/js/frontend.min.js" />
-      <root url="file://$PROJECT_DIR$/code/public/js/bootstrap.min.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/js/select2_locale_es.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/js/npm.min.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/zh_CN.min.js" />
@@ -90,7 +88,6 @@
       <root url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/sq_AL.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/hu_HU.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/ro_RO.min.js" />
-      <root url="file://$PROJECT_DIR$/code/public/plugins/bootstrap-3.3.5-dist/js/bootstrap.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/it_IT.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/pt_BR.min.js" />
       <root url="file://$PROJECT_DIR$/code/public/plugins/formvalidation/js/language/nl_NL.min.js" />

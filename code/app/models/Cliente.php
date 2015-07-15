@@ -37,15 +37,20 @@ use Illuminate\Auth\UserTrait;
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereIdPlan($value)
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereUpdatedAt($value)
+ * @property integer $id_encuesta 
+ * @property-read mixed $is_admin 
+ * @property-read \Encuesta $encuesta 
+ * @property-read \Plan $plan 
+ * @method static \Illuminate\Database\Query\Builder|\Cliente whereIdEncuesta($value)
  */
 class Cliente extends \Eloquent implements UserInterface, RemindableInterface
 {
 	use UserTrait, RemindableTrait;
 
-	public static $rules = array('rut_cliente'          => 'required',
+	public static $rules = array('rut_cliente'          => 'required|unique:cliente',
 	                             'nombre_cliente'       => 'required',
 	                             'fono_cliente'         => 'required',
-	                             'correo_cliente'       => 'required',
+	                             'correo_cliente'       => 'required|email',
 	                             'direccion_cliente'    => 'required',
 	                             'informacion_cliente'  => 'required',
 	                             'desea_correo_cliente' => 'required',
@@ -72,6 +77,17 @@ class Cliente extends \Eloquent implements UserInterface, RemindableInterface
 	                              'id_apariencia',
 	                              'id_plan',);
 
+	public function getIsAdminAttribute()
+	{
+		return $this->attributes['id_tipo_usuario'] == 1;
+	}
+
+	public function encuesta()
+	{
+		return $this->belongsTo('Encuesta', 'id_encuesta');
+	}
+
+
 	public function apariencias()
 	{
 		return $this->belongsToMany('Apariencia', 'cliente_apariencia', 'id_cliente', 'id_apariencia');
@@ -96,4 +112,11 @@ class Cliente extends \Eloquent implements UserInterface, RemindableInterface
 	{
 		return $this->hasManyThrough('Sector', 'Encuesta', 'id_sector', 'id_encuesta');
 	}
+
+	public function usuarios()
+	{
+		return $this->hasMany('User', 'id_usuario');
+	}
+
+
 }

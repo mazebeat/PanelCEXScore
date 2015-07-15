@@ -7,8 +7,51 @@ class EncuestasController extends \ApiController
 {
 	public function __construct()
 	{
-		parent::__construct();
-		$this->beforeFilter('csrf');
+		//parent::__construct();
+		//$this->beforeFilter('csrf');
+	}
+
+	/**
+	 * @param \Encuesta $survey
+	 */
+	public static function generateDefaultSurvey(Encuesta $survey)
+	{
+		$question1 = new PreguntaCabecera(['descripcion_1' => 'Pregunta de Efectividad', 'numero_pregunta' => 1, 'id_tipo_respuesta' => 1, 'id_estado' => 1, 'id_momento' => 1]);
+		$question1 = $survey->preguntas()->save($question1);
+
+		$subquestion1 = new PreguntaCabecera(['descripcion_1'     => '¿Por qué califica con esa nota? (opcional)',
+		                                      'id_pregunta_padre' => $question1->id_pregunta_cabecera,
+		                                      'id_tipo_respuesta' => 5,
+		                                      'id_estado'         => 1,
+		                                      'id_momento'        => 1]);
+		$survey->preguntas()->save($subquestion1);
+
+		$question2 = new PreguntaCabecera(['descripcion_1' => 'Pregunta de Facilidad', 'numero_pregunta' => 2, 'id_tipo_respuesta' => 1, 'id_estado' => 1, 'id_momento' => 2]);
+		$question2 = $survey->preguntas()->save($question2);
+
+		$subquestion2 = new PreguntaCabecera(['descripcion_1'     => '¿Por qué califica con esa nota? (opcional)',
+		                                      'id_pregunta_padre' => $question2->id_pregunta_cabecera,
+		                                      'id_tipo_respuesta' => 5,
+		                                      'id_estado'         => 1,
+		                                      'id_momento'        => 2]);
+		$survey->preguntas()->save($subquestion2);
+
+		$question3 = new PreguntaCabecera(['descripcion_1' => ' Pregunta de lo Grato de la interacción', 'numero_pregunta' => 3, 'id_tipo_respuesta' => 1, 'id_momento' => 3]);
+		$question3 = $survey->preguntas()->save($question3);
+
+		$subquestion3 = new PreguntaCabecera(['descripcion_1'     => '¿Por qué califica con esa nota? (opcional)',
+		                                      'id_pregunta_padre' => $question3->id_pregunta_cabecera,
+		                                      'id_tipo_respuesta' => 5,
+		                                      'id_estado'         => 1,
+		                                      'id_momento'        => 3]);
+		$survey->preguntas()->save($subquestion3);
+
+		$question4 = new PreguntaCabecera(['descripcion_1'     => '¿Recomendaría nuestra empresa a sus amigos/conocidos?',
+		                                   'numero_pregunta'   => 4,
+		                                   'id_tipo_respuesta' => 6,
+		                                   'id_estado'         => 1,
+		                                   'id_momento'        => 4]);
+		$survey->preguntas()->save($question4);
 	}
 
 	/**
@@ -17,13 +60,10 @@ class EncuestasController extends \ApiController
 	 *
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	public function index($idcliente = null, $canal = null)
+	public function index($idcliente = null, $canal = null, $momento = null)
 	{
-		if (Cache::get('finish')) {
-			return Redirect::to('survey/success');
-		}
 
-		if (isset($idcliente) && isset($canal)) {
+		if (isset($idcliente) && isset($canal) && isset($momento)) {
 
 			//if (Session::has('idcliente') && Session::has('canal') && Session::has('theme') && Session::has('survey')) {
 			//	return View::make('survey.encuesta')->withTheme(Session::get('theme'))->withSurvey(Session::get('survey'));
@@ -47,7 +87,19 @@ class EncuestasController extends \ApiController
 					return Redirect::to('survey/error')->with('error', $error);
 				}
 
-				$id     = Crypt::decrypt($idcliente);
+				$id = Crypt::decrypt($idcliente);
+
+				if (Cache::get('finish') && $id == Cache::get('idcliente')) {
+					return Redirect::to('survey/success');
+				}
+
+				//if (Session::has('idcliente') && $id != Crypt::decrypt(Session::get('idcliente'))) {
+				Session::forget('theme');
+				Session::forget('survey');
+				Session::forget('idcliente');
+				Cache::flush();
+				//}
+
 				$client = Cliente::find($id);
 
 				if ($client->first()->exists) {
@@ -55,19 +107,8 @@ class EncuestasController extends \ApiController
 					$plan = $client->plan;
 
 					if (!is_null($plan)) {
-
-						if ($plan->id_plan == 1) {
-							$theme  = Apariencia::find(1);
-							$survey = Encuesta::find(1);
-						}
-						else {
-							$survey = $client->sector->encuestas->first();
-							$theme  = $client->apariencias->first();
-						}
-
-						if (!is_null($theme) && $theme->exists) {
-							$theme = Apariencia::find(1);
-						}
+						$survey = $client->encuesta;
+						$theme  = $client->apariencias->first();
 
 						if (!Session::has('theme')) {
 							Session::put('theme', $theme);
@@ -82,7 +123,7 @@ class EncuestasController extends \ApiController
 						}
 					}
 
-					return View::make('survey.encuesta')->withTheme($theme)->withSurvey($survey);
+					return View::make('survey.encuesta')->withTheme($theme)->withSurvey($survey)->withIdplan($plan->id_plan);
 				}
 
 				//var_dump('Not found client');
@@ -157,13 +198,14 @@ class EncuestasController extends \ApiController
 			$respuestaDetalle->save();
 		}
 		if (count($data['user']) && static::objectHasProperty($data['user'])) {
-			$value                = $data['user'];
-			$user                 = new Usuario();
-			$user->nombre_usuario = $value->name;
-			$user->edad_usuario   = $value->age;
-			$user->genero_cliente = $value->gender;
-			$user->correo_cliente = $value->email;
-			//$user->id_tipo_cliente = null;
+			$value                 = $data['user'];
+			$user                  = new Usuario();
+			$user->nombre_usuario  = $value->name;
+			$user->edad_usuario    = $value->age;
+			$user->genero_cliente  = $value->gender;
+			$user->correo_cliente  = $value->email;
+			$user->id_tipo_usuario = 3;
+			$user->id_cliente      = Crypt::decrypt(Session::get('idcliente'));
 			if (isset($value->wish_email) && (int)$value->wish_email == 1) {
 				$user->desea_correo_cliente = 'NO';
 			}

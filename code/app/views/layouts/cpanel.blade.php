@@ -10,9 +10,8 @@
 	<title>@yield('title')</title>
 
 	{{ HTML::style('css/bootstrap.min.css') }}
-
-	{{ HTML::style('backend/css/bootstrap-flaty.min.css') }}    {{ HTML::style('backend/css/sb-admin.css') }}
-
+	{{ HTML::style('backend/css/bootstrap-flaty.min.css') }}
+	{{ HTML::style('backend/css/dashboard.css') }}
 	{{ HTML::style('backend/css/backend.min.css') }}
 
 	{{ HTML::style('//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css') }}                            <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->    <!--[if lt IE 9]>
@@ -23,15 +22,30 @@
 
 <body>
 
-<main id="wrapper">
-	@include('layouts.modules.cpanel.top-menu')
-	<section id="page-wrapper">
-		<article class="container-fluid">
-			@include('layouts.modules.cpanel.heading-page')
+@include('layouts.modules.cpanel.top-menu')
+<main class="container-fluid">
+	<section class="row">
+		<article class="col-sm-3 col-md-2 sidebar">
+			@include('layouts.modules.cpanel.left-menu')
+		</article>
+		<article class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<section class="row">
+				<article class="col-lg-12">
+					<h1 class="page-header">
+						@yield('page-title')
+					</h1>
+					<ol class="breadcrumb">
+						@section('breadcrumb')
+							<li><i class="fa fa-dashboard"></i> <a href="{{ url('admin/login') }}">Inicio</a></li>
+						@show
+					</ol>
+				</article>
+			</section>
 			@yield('content')
 		</article>
 	</section>
-</main>{{ HTML::script('//code.jquery.com/jquery-1.11.0.min.js') }}
+</main>
+{{ HTML::script('//code.jquery.com/jquery-1.11.0.min.js') }}
 {{ HTML::script('js/bootstrap.min.js') }}
 </body>
 </html>

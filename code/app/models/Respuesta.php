@@ -22,6 +22,7 @@
  * @method static \Illuminate\Database\Query\Builder|\Respuesta whereIdPreguntaDetalle($value)
  * @method static \Illuminate\Database\Query\Builder|\Respuesta whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Respuesta whereUpdatedAt($value)
+ * @property-read \RespuestaDetalle $detalle 
  */
 class Respuesta extends \Eloquent
 {

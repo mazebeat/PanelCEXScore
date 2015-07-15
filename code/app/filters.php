@@ -11,8 +11,6 @@
 |
 */
 
-use MyProject\Proxies\__CG__\stdClass;
-
 App::before(function ($request) {
 	//
 });
@@ -49,11 +47,13 @@ Route::filter('auth', function () {
 			//                                'text'  => 'Usuario no logueado'),
 			//             'options' => array('left' => HTML::link(URL::to('/'), 'Salir', array('class' => 'col-md-3 btn btn-default btn-lg pull-right text-uppercase'))));
 
-			$message           = new stdClass();
-			$message->title    = 'Atención';
-			$message->subtitle = 'Usuario no logueado';
+			//$message           = new \stdClass();
+			//$message->title    = 'Atención';
+			//$message->subtitle = 'Usuario no logueado';
+			//
+			//return View::make('survey.messages')->withMessage($message);
 
-			return View::make('survey.messages')->withMessage($message);
+			return Redirect::to('admin/login');
 		}
 	}
 });

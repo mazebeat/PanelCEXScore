@@ -2,7 +2,7 @@
 
 use SebastianBergmann\Exporter\Exception;
 
-class ApiController extends Controller
+class ApiController extends \BaseController
 {
 	/**
 	 * ApiController constructor.

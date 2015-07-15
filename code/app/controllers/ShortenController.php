@@ -12,10 +12,17 @@ class ShortenController extends \ApiController
 
 	public function index()
 	{
-		$clients = Cliente::where('id_cliente', '!=', Config::get('default.idcliente'))->lists('nombre_cliente', 'id_cliente');
+		//if(Session::has('idcliente'))
+		//{
+		//	$clients = Cliente::find(Session::get('idcliente');
+		//	if()
+			$clients = Cliente::where('id_cliente', '!=', Config::get('default.idcliente'))->lists('nombre_cliente', 'id_cliente');
+		//}
+		$clients = Cliente::lists('nombre_cliente', 'id_cliente');
 		$canals  = Canal::lists('descripcion_canal', 'codigo_canal');
+		$moments  = Momento::lists('descripcion_momento', 'id_momento');
 
-		return View::make('shorturl.home')->withClients($clients)->withCanals($canals);
+		return View::make('admin.shorturl.home')->withClients($clients)->withCanals($canals)->withMoments($moments);
 	}
 
 	public function getShorten($given = null)
@@ -45,8 +52,8 @@ class ShortenController extends \ApiController
 
 		try {
 			if (!isset($url) || $url == '') {
-				$url   = url('/survey', array(Crypt::encrypt(Input::get('client', null)), Crypt::encrypt(Input::get('canal', null))));
-				$rules = array('client' => 'required|integer', 'canal' => 'required|min:2');
+				$url   = url('/survey', [Crypt::encrypt(Input::get('client', null)), Crypt::encrypt(Input::get('canal', null)), Crypt::encrypt(Input::get('momento', null))]);
+				$rules = ['client' => 'required|integer', 'canal' => 'required|min:2', 'momento' => 'required'];
 			}
 
 			$validator = Validator::make(Input::all(), $rules);
@@ -57,21 +64,20 @@ class ShortenController extends \ApiController
 			$record = Url::whereUrl($url)->first();
 
 			if (isset($record) && $record->exists) {
-				$url = url('/', array($record->given));
+				$url = url('/', [$record->given]);
 
-				return View::make('shorturl.result')->with('url', $url);
+				return View::make('admin.shorturl.result')->with('url', $url);
 			}
 
 			$data        = new Url;
 			$data->url   = $url;
 			$data->given = Url::getShortenedUrl();
 			//$data->params = implode('|', Input::except('_token'));
-
 			if ($data->save()) {
 				$row = Url::whereUrl($url)->first();
-				$url = url('/', array($row->given));
+				$url = url('/', [$row->given]);
 
-				return View::make('shorturl.result')->with('url', $url);
+				return View::make('admin.shorturl.result')->with('url', $url);
 			}
 
 		} catch (Exception $e) {

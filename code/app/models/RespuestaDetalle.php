@@ -15,6 +15,7 @@
  * @method static \Illuminate\Database\Query\Builder|\RespuestaDetalle whereIdRespuesta($value)
  * @method static \Illuminate\Database\Query\Builder|\RespuestaDetalle whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\RespuestaDetalle whereUpdatedAt($value)
+ * @property-read \Respuesta $cabecera 
  */
 class RespuestaDetalle extends \Eloquent
 {

@@ -1,0 +1,1 @@
+E:\Projects\Php\PanelEXScore\code\app/views/clientes/show.blade.php

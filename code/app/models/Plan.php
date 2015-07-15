@@ -13,6 +13,7 @@
  * @method static \Illuminate\Database\Query\Builder|\Plan whereIdEstado($value)
  * @method static \Illuminate\Database\Query\Builder|\Plan whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Plan whereUpdatedAt($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Cliente[] $clientes 
  */
 class Plan extends \Eloquent
 {

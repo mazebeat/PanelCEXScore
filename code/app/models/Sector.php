@@ -3,12 +3,12 @@
 /**
  * Sector
  *
- * @property integer $id_sector 
- * @property string $descripcion_sector 
- * @property \Carbon\Carbon $created_at 
- * @property \Carbon\Carbon $updated_at 
- * @property-read \Illuminate\Database\Eloquent\Collection|\Cliente[] $clientes 
- * @property-read \Illuminate\Database\Eloquent\Collection|\Encuesta[] $encuestas 
+ * @property integer $id_sector
+ * @property string $descripcion_sector
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Cliente[] $clientes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Encuesta[] $encuestas
  * @method static \Illuminate\Database\Query\Builder|\Sector whereIdSector($value)
  * @method static \Illuminate\Database\Query\Builder|\Sector whereDescripcionSector($value)
  * @method static \Illuminate\Database\Query\Builder|\Sector whereCreatedAt($value)

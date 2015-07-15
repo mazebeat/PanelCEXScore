@@ -30,7 +30,7 @@
 		</article>
 	@endif
 	<section class="row">
-		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center instrucciones">
 			@if(isset($message))
 				<h1>{{ $message->title }}</h1>
 				<h4>{{ $message->subtitle }}</h4>

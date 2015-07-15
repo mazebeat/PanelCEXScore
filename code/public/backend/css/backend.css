@@ -1,39 +1,6 @@
 @charset "utf-8";
 @import url(../../css/fonts.min.css);
 
-html {
-    min-height: 100%;
-    position: relative;
-    font-size: 16px;
-    line-height: 1.45
-}
-
-body {
-    color: #333
-}
-
-header, footer {
-    width: 100%
-}
-
-main {
-}
-
-main > section.row {
-    min-height: 200px;
-}
-
-footer {
-}
-
-a {
-    color: #fff
-}
-
-header a, footer a, header .btn, footer .btn {
-    font-size: 18px
-}
-
 hr {
     background-image: -moz-linear-gradient(left, rgba(0, 0, 0, 0), rgba(215, 215, 215, 0.75), rgba(0, 0, 0, 0));
     background-image: -ms-linear-gradient(left, rgba(0, 0, 0, 0), rgba(215, 215, 215, 0.75), rgba(0, 0, 0, 0));
@@ -128,9 +95,13 @@ hr {
 @media screen and (min-width: 1000px) {
 }
 
+header.backend {
+    padding-bottom: 10px;
+}
+
 section#login {
     height: 350px;
-    margin-top: 10%;
+    /*margin-top: 5%;*/
 }
 
 #go-top {

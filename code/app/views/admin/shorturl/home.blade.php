@@ -1,0 +1,74 @@
+@extends('layouts.cpanel')
+
+@section('title')
+@endsection
+
+@section('page-title')
+@endsection
+
+@section('breadcrumb')
+	<section class="row">
+		<article class="col-lg-12">
+			<h1 class="page-header">
+				@yield('page-title')
+			</h1>
+			<ol class="breadcrumb">
+				@section('breadcrumb')
+					<li>
+						<i class="fa fa-dashboard"></i> <a href="{{ URL::to('admin/login') }}">Inicio</a>
+					</li>
+				@show
+			</ol>
+		</article>
+	</section>
+@endsection
+@section('content')
+	<header class="container-narrow">
+		<div class="masthead">
+			<h3 class="muted">Generate short URL</h3>
+		</div>
+	</header>
+	@if($errors->has())
+		<div class="row">
+			<div class="alert alert-danger alert-dismissable">
+				<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+				<ul>
+					@foreach($errors->all() as $message)
+						<li>{{$message}}</li>
+					@endforeach
+				</ul>
+			</div>
+		</div>
+	@endif
+	<div class="row">
+		<div class="shortit">
+			{{Form::open(array('url' => 'admin/shorten', 'method' => 'POST', 'class' => 'form-search'))}}
+			<div class="form-group">
+				<div id="custom-search-input">
+					<div class="input-group col-md-12">
+						{{ Form::select2('client', $clients, Input::old('client'), ['class' => 'form-control', 'placeholder' => 'Cliente...']) }}
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div id="custom-search-input">
+					<div class="input-group col-md-12">
+						{{ Form::select2('canal', $canals, Input::old('canal'), ['class' => 'form-control', 'placeholder' => 'Canal...']) }}
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div id="custom-search-input">
+					<div class="input-group col-md-12">
+						{{ Form::select2('momento', $moments, Input::old('momento'), ['class' => 'form-control', 'placeholder' => 'Momento...']) }}
+					</div>
+				</div>
+			</div>
+			<hr>
+			<div class="form-group">
+				{{Form::url('url',null, array('placeholder' => 'Paste a link...', 'class' => 'form-control'))}}
+			</div>
+			<button class="btn btn-info pull-right" type="submit"><i class="fa fa-magic fa-fw"></i>Generar...</button> {{Form::close()}}
+		</div>
+	</div>
+@endsection

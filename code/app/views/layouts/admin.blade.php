@@ -28,13 +28,13 @@
 	@yield('style')
 </head>
 <body>
-	<header class="container">
+	<header class="container backend">
 		@yield('header')
 	</header>
-	<main class="container">
+	<main class="container backend">
 		@yield('content')
 	</main>
-	<footer class="container">
+	<footer class="container backend">
 		@yield('footer')
 	</footer>
 	<a href="#" id="go-top" role="button" title="Click para ir al comienzo!" data-toggle="tooltip" data-placement="left"><i class="fa fa-chevron-circle-up fa-3x"></i></a> {{ HTML::script('//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js') }}

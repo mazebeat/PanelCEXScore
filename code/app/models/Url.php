@@ -13,6 +13,8 @@
  * @method static \Illuminate\Database\Query\Builder|\Url whereUrl($value)
  * @method static \Illuminate\Database\Query\Builder|\Url whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Url whereUpdatedAt($value)
+ * @property string $params 
+ * @method static \Illuminate\Database\Query\Builder|\Url whereParams($value)
  */
 class Url extends Eloquent
 {

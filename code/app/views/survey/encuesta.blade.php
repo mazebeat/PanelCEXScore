@@ -13,7 +13,7 @@
 
 @section('header')
 	<section class="row">
-		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center">
+		<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center header_text">
 			<section class="row">
 				<article class="col-xs-12 col-sm-10 col-md-6 col-lg-6 col-center-block">
 					{{ HTML::image($theme->logo_header, 'header-logo', array('class' => 'img-responsive center-block')) }}
@@ -28,7 +28,7 @@
 
 @section('content')
 	<section class="row">
-		<article class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-center-block header_text">
+		<article class="col-xs-12 col-sm-12 col-md-10 col-lg-10 col-center-block instrucciones">
 			<h4>{{ $survey->description }}</h4>
 			<h4>Luego de completar la encuesta, presiona <em>"Enviar"</em></h4>
 		</article> @if(isset($theme) && !is_null($theme->logo_incentivo))
@@ -47,12 +47,13 @@
 						@endif
 					</article>
 				@endif
-				{{ Form::open(array('url' => 'survey', 'method' => 'POST', 'accept-charset' => 'UTF-8', 'role' => 'form', 'id' => 'surveyForm', 'class' => 'form-horizontal')) }}
+				{{ Form::open(array('url' => 'survey/store', 'method' => 'POST', 'accept-charset' => 'UTF-8', 'role' => 'form', 'id' => 'surveyForm', 'class' => 'form-horizontal')) }}
 				<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 					<section class="row">
 						{{ HTML::generateSurvey($survey) }}
 					</section>
-				</article> @if(isset($theme))
+				</article>
+				@if(isset($idplan) && isset($theme) && $idplan != 1 && $theme->deseaCaptura())
 					<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 						@include('layouts.form_cliente')
 					</article>
@@ -81,28 +82,28 @@
 		var input_color = 'blue';
 
 		switch (color) {
-			case 'rojo':
+			case 'red':
 				input_color = 'red';
 				break;
-			case 'verde':
+			case 'green':
 				input_color = 'green';
 				break;
-			case 'azul':
+			case 'blue':
 				input_color = 'blue';
 				break;
-			case 'gris':
+			case 'grey':
 				input_color = 'grey';
 				break;
-			case 'naranjo':
+			case 'orange':
 				input_color = 'orange';
 				break;
-			case 'amarillo':
+			case 'yellow':
 				input_color = 'yellow';
 				break;
-			case 'rosado':
+			case 'pink':
 				input_color = 'pink';
 				break;
-			case 'morado':
+			case 'purple':
 				input_color = 'purple';
 				break;
 			default:

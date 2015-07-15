@@ -515,3 +515,53 @@ Str::macro('hes', function ($str) {
 
 	return $out;
 });
+
+/**
+ * ---------------------------
+ *  FORM ADD OR MODIFY SURVEY
+ * ---------------------------
+ */
+\Form::macro('loadSurvey', function (Encuesta $survey, $idplan) {
+
+	$out      = '';
+	$readonly = false;
+
+	if ((int)$idplan == 1) {
+		$readonly = true;
+	}
+
+	if (!isset($survey) && !$survey->exists) {
+		return \HTML::alert('danger', array('No existe encuesta asociada.'), 'Atención!...');
+	}
+
+	$questions = $survey->preguntas;
+
+	if (count($questions) <= 0) {
+		return \HTML::alert('warning', array('No existen preguntas para esta encuesta.'), 'Atención!...');
+	}
+
+	$count = 1;
+	foreach ($questions as $key => $question) {
+		if ($question->id_pregunta_padre === null) {
+			$out .= Form::generateInput('question' . $count++, $question, $readonly);
+		}
+	}
+
+	return $out;
+});
+
+Form::macro('generateInput', function ($name, PreguntaCabecera $question, $readonly = false) {
+
+	$ro = '';
+
+	if ($readonly) {
+		$ro = 'readonly';
+	}
+
+	$out = '<div class="form-group">';
+	$out .= Form::label($name, $name);
+	$out .= Form::text($name, trim($question->descripcion_1), ['class' => 'form-control', $ro]);
+	$out .= '</div>';
+
+	return $out;
+});

@@ -3,11 +3,11 @@
 /**
  * Estado
  *
- * @property integer $id_estado 
- * @property string $tipo_estado 
- * @property string $descripcion_estado 
- * @property \Carbon\Carbon $created_at 
- * @property \Carbon\Carbon $updated_at 
+ * @property integer $id_estado
+ * @property string $tipo_estado
+ * @property string $descripcion_estado
+ * @property \Carbon\Carbon $created_at
+ * @property \Carbon\Carbon $updated_at
  * @method static \Illuminate\Database\Query\Builder|\Estado whereIdEstado($value)
  * @method static \Illuminate\Database\Query\Builder|\Estado whereTipoEstado($value)
  * @method static \Illuminate\Database\Query\Builder|\Estado whereDescripcionEstado($value)

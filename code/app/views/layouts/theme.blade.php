@@ -4,10 +4,11 @@
 	header {
 		background-color: {{ $theme->color_header }};
 		color: {{ $theme->color_text_header }};
+
 	}
 
 	.header_text {
-		color: {{ $theme->color_instrucciones }};
+		color: {{ $theme->color_text_header }};
 	}
 
 	h2 small {
@@ -17,6 +18,10 @@
 
 	body {
 		background-color: {{ $theme->color_body }};
+	}
+
+	main.backend {
+		margin-top: 10px;
 	}
 
 	#surveyForm input[type=submit], input[type=button], .btn {
@@ -30,11 +35,20 @@
 		color: {{ $theme->color_text_body }};
 	}
 
+	.instrucciones{
+		color: {{ $theme->color_instrucciones }};
+	}
+
 	.btn-primary, .label-primary, .alert-info {
 		background-color: {{ $theme->color_body }};
 	}
 
 	footer {
+		background-color: {{ $theme->color_footer }};
+		color: {{ $theme->color_text_footer }};
+	}
+
+	footer.text_footer {
 		background-color: {{ $theme->color_body }};
 		color: {{ $theme->color_text_body }};
 	}
