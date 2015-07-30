@@ -1,4 +1,4 @@
-<?php
+<?php namespace App\Util;
 
 /**
  * -------------------------------------
@@ -6,7 +6,7 @@
  * -------------------------------------
  *
  */
-Str::macro('hes', function ($str) {
+\Str::macro('hes', function ($str) {
 	$find    = array("á", "é", "í", "ó", "ú", "ñ", "Á", "É", "Í", "Ó", "Ú", "Ñ");
 	$replace = array("&aacute;",
 	                 "&eacute;",
@@ -41,7 +41,7 @@ Str::macro('hes', function ($str) {
 		$header .= '<td>' . $i . '</td>';
 	}
 	$header .= '</tr></thead><tbody class="text-center"><tr><td class="text-left">' . $name . '</td>';
-	switch (Str::upper($order)) {
+	switch (\Str::upper($order)) {
 		case 'ASC':
 			for ($i = 1; $i <= $max_number; $i++) {
 				$body .= '<td>' . \Form::radio('name', $i, false, $options) . '</td>';
@@ -148,9 +148,9 @@ Str::macro('hes', function ($str) {
 			break;
 	}
 	$output = ' <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2 col-lg-offset-2"><div role = "alert" class="alert ' . $type . ' fade in"><button data - dismiss = "alert" class="close" type = "button"><i class="fa fa-times"></i></button>';
-	$output .= isset($title) ? '<h4> ' . Str::hes($title) . '</h4> ' : '';
-	$output .= isset($subtitle) ? ' <h5>' . Str::hes($subtitle) . ' </h5> ' : '';
-	$output .= isset($text) ? ' <p>' . Str::hes($text) . ' </p> ' : '';
+	$output .= isset($title) ? '<h4> ' . \Str::hes($title) . '</h4> ' : '';
+	$output .= isset($subtitle) ? ' <h5>' . \Str::hes($subtitle) . ' </h5> ' : '';
+	$output .= isset($text) ? ' <p>' . \Str::hes($text) . ' </p> ' : '';
 	if (isset($options)) {
 		$output .= ' <p>';
 		foreach ($options as $option) {
@@ -179,17 +179,17 @@ Str::macro('hes', function ($str) {
 					}, 10000);
 				</script> ';
 
-	return '<div class="errors alert alert-' . $type . '"><h5><strong> ' . Str::hes($head) . '</strong></h5>' . Str::hes($message) . '</div>' . $script;
+	return '<div class="errors alert alert-' . $type . '"><h5><strong> ' . \Str::hes($head) . '</strong></h5>' . \Str::hes($message) . '</div>' . $script;
 });
 
 /**
  * RESPONSIVE MULTI OPTIONS
  */
-\HTML::macro('responsiveOpt', function (PreguntaCabecera $question, $max = 7, $isSubQuestion = false, $text = 'Calificaci&oacute;n') {
+\HTML::macro('responsiveOpt', function (\PreguntaCabecera $question, $max = 7, $isSubQuestion = false, $text = 'Calificaci&oacute;n') {
 	$responsive = array('class'                    => 'form-control',
 	                    'data-placeholder'         => '...',
 	                    'data-fv-notempty',
-	                    'data-fv-notempty-message' => Lang::get('validation.required', ['attribute' => '']));
+	                    'data-fv-notempty-message' => \Lang::get('validation.required', ['attribute' => '']));
 
 	//Debugbar::addMessage('RESPONSIVEOPTION | ID PREGUNTA: ' . $question->id_pregunta_cabecera . ' NUMERO PREGUNTA: ' . $question->numero_pregunta);
 
@@ -216,20 +216,20 @@ Str::macro('hes', function ($str) {
 /**
  * MULTI OPTIONS
  */
-\HTML::macro('multiOptions', function (PreguntaCabecera $question, $isSubQuestion = false) {
+\HTML::macro('multiOptions', function (\PreguntaCabecera $question, $isSubQuestion = false) {
 	$out = '';
 
 	if ($isSubQuestion) {
-		$pregunta_padre    = PreguntaCabecera::select(array('id_pregunta_cabecera', 'numero_pregunta'))->whereIdPreguntaCabecera($question->id_pregunta_padre)->first(array('id_pregunta_cabecera',
+		$pregunta_padre    = \PreguntaCabecera::select(array('id_pregunta_cabecera', 'numero_pregunta'))->whereIdPreguntaCabecera($question->id_pregunta_padre)->first(array('id_pregunta_cabecera',
 		                                                                                                                                                                    'numero_pregunta'));
 		$numero_pregunta   = $pregunta_padre->numero_pregunta;
 		$id_pregunta_padre = $pregunta_padre->id_pregunta_cabecera;
-		$out .= '<h5>' . Str::hes($question->descripcion_1) . '</h5>';
+		$out .= '<h5>' . \Str::hes($question->descripcion_1) . '</h5>';
 	}
 	else {
 		$numero_pregunta   = $question->numero_pregunta;
 		$id_pregunta_padre = $question->id_pregunta_cabecera;
-		$out .= '<h4>' . Str::hes($numero_pregunta . '.- ' . $question->descripcion_1) . '</h4>';
+		$out .= '<h4>' . \Str::hes($numero_pregunta . '.- ' . $question->descripcion_1) . '</h4>';
 	}
 
 	//Debugbar::addMessage('MULTIOPTIONS | ID PREGUNTA: ' . $id_pregunta_padre . ' NUMERO PREGUNTA: ' . $numero_pregunta);
@@ -240,21 +240,21 @@ Str::macro('hes', function ($str) {
 /**
  * SINGLE OPTIONS
  */
-\HTML::macro('singleOptions', function (PreguntaCabecera $question, $max = 7, $isSubQuestion = false, $text = 'Calificaci&oacute;n') {
+\HTML::macro('singleOptions', function (\PreguntaCabecera $question, $max = 7, $isSubQuestion = false, $text = 'Calificaci&oacute;n') {
 
 	$out = '';
 
 	if ($isSubQuestion) {
-		$pregunta_padre    = PreguntaCabecera::select(array('id_pregunta_cabecera', 'numero_pregunta'))->whereIdPreguntaCabecera($question->id_pregunta_padre)->first(array('id_pregunta_cabecera',
+		$pregunta_padre    = \PreguntaCabecera::select(array('id_pregunta_cabecera', 'numero_pregunta'))->whereIdPreguntaCabecera($question->id_pregunta_padre)->first(array('id_pregunta_cabecera',
 		                                                                                                                                                                    'numero_pregunta'));
 		$numero_pregunta   = $pregunta_padre->numero_pregunta;
 		$id_pregunta_padre = $pregunta_padre->id_pregunta_cabecera;
-		$out .= '<h5>' . Str::hes($question->descripcion_1) . '</h5>';
+		$out .= '<h5>' . \Str::hes($question->descripcion_1) . '</h5>';
 	}
 	else {
 		$numero_pregunta   = $question->numero_pregunta;
 		$id_pregunta_padre = $question->id_pregunta_cabecera;
-		$out .= '<h4>' . Str::hes($numero_pregunta . '.- ' . $question->descripcion_1) . '</h4>';
+		$out .= '<h4>' . \Str::hes($numero_pregunta . '.- ' . $question->descripcion_1) . '</h4>';
 	}
 
 	//Debugbar::addMessage('SINGLEOPTIONS | ID PREGUNTA: ' . $id_pregunta_padre . ' NUMERO PREGUNTA: ' . $numero_pregunta);
@@ -282,7 +282,7 @@ Str::macro('hes', function ($str) {
 		for ($i = 1; $i <= $max; $i++) {
 			if ($i == 1) {
 				$out .= '<td>
-						<input type="radio" class=""  name="question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[value]" value="' . $i . '"  data-fv-notempty data-fv-notempty-message="' . Lang::get('validation.required', ['attribute' => '']) . '" data-fv-choice="true">
+						<input type="radio" class=""  name="question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[value]" value="' . $i . '"  data-fv-notempty data-fv-notempty-message="' . \Lang::get('validation.required', ['attribute' => '']) . '" data-fv-choice="true">
 					</td>';
 			}
 			else {
@@ -308,12 +308,12 @@ Str::macro('hes', function ($str) {
 /**
  * TEXT OPTIONS
  */
-\HTML::macro('textOptions', function (PreguntaCabecera $question, $multi, $isSubQuestion = false) {
+\HTML::macro('textOptions', function (\PreguntaCabecera $question, $multi, $isSubQuestion = false) {
 
 	$out = '';
 
 	if ($isSubQuestion) {
-		$pregunta_padre    = PreguntaCabecera::select(array('id_pregunta_cabecera', 'numero_pregunta'))->whereIdPreguntaCabecera($question->id_pregunta_padre)->first(array('id_pregunta_cabecera',
+		$pregunta_padre    = \PreguntaCabecera::select(array('id_pregunta_cabecera', 'numero_pregunta'))->whereIdPreguntaCabecera($question->id_pregunta_padre)->first(array('id_pregunta_cabecera',
 		                                                                                                                                                                    'numero_pregunta'));
 		$numero_pregunta   = $pregunta_padre->numero_pregunta;
 		$id_pregunta_padre = $pregunta_padre->id_pregunta_cabecera;
@@ -324,10 +324,10 @@ Str::macro('hes', function ($str) {
 		                           'data-fv-stringlength'         => 'true',
 		                           'data-fv-stringlength-min'     => 0,
 		                           'data-fv-stringlength-max'     => 250,
-		                           'data-fv-stringlength-message' => Lang::get('validation.max.string', ['attribute' => '', 'max' => 250]));
+		                           'data-fv-stringlength-message' => \Lang::get('validation.max.string', ['attribute' => '', 'max' => 250]));
 		$textbox           = array('placeholder' => '...',
 		                           'class'       => 'form-control');
-		$out .= '<h5>' . Str::hes($question->descripcion_1) . '</h5>';
+		$out .= '<h5>' . \Str::hes($question->descripcion_1) . '</h5>';
 	}
 	else {
 		$numero_pregunta   = $question->numero_pregunta;
@@ -344,7 +344,7 @@ Str::macro('hes', function ($str) {
 		                           'data-fv-stringlength-message' => Lang::get('validation.max.string', ['attribute' => '', 'max' => 250]));
 		$textbox           = array('placeholder' => '...',
 		                           'class'       => 'form-control');
-		$out .= '<h4>' . Str::hes($numero_pregunta . '.- ' . $question->descripcion_1) . '</h4>';
+		$out .= '<h4>' . \Str::hes($numero_pregunta . '.- ' . $question->descripcion_1) . '</h4>';
 	}
 
 	//Debugbar::addMessage('TEXTOPTION | ID PREGUNTA: ' . $id_pregunta_padre . ' NUMERO PREGUNTA: ' . $numero_pregunta);
@@ -352,11 +352,11 @@ Str::macro('hes', function ($str) {
 	$out .= '<div class="form-group">';
 
 	if ($multi) {
-		$out .= Form::textarea('question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[text]', null, $textarea);
+		$out .= \Form::textarea('question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[text]', null, $textarea);
 		$out .= '<small class="count"></small>';
 	}
 	else {
-		$out .= Form::text('question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[text]', null, $textbox);
+		$out .= \Form::text('question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[text]', null, $textbox);
 	}
 
 	//$out .= '<div class="messageContainer"></div>';
@@ -368,16 +368,16 @@ Str::macro('hes', function ($str) {
 /**
  * RANGE OPTIONS
  */
-\HTML::macro('rangeOptions', function (PreguntaCabecera $question, $isSubQuestion = false) {
+\HTML::macro('rangeOptions', function (\PreguntaCabecera $question, $isSubQuestion = false) {
 
 	$out = '';
 
 	if ($isSubQuestion) {
-		$pregunta_padre    = PreguntaCabecera::select(array('id_pregunta_cabecera', 'numero_pregunta'))->whereIdPreguntaCabecera($question->id_pregunta_padre)->first(array('id_pregunta_cabecera',
+		$pregunta_padre    = \PreguntaCabecera::select(array('id_pregunta_cabecera', 'numero_pregunta'))->whereIdPreguntaCabecera($question->id_pregunta_padre)->first(array('id_pregunta_cabecera',
 		                                                                                                                                                                    'numero_pregunta'));
 		$numero_pregunta   = $pregunta_padre->numero_pregunta;
 		$id_pregunta_padre = $pregunta_padre->id_pregunta_cabecera;
-		$out .= '<h5>' . Str::hes($question->descripcion_1) . '</h5>';
+		$out .= '<h5>' . \Str::hes($question->descripcion_1) . '</h5>';
 	}
 	else {
 		$numero_pregunta   = $question->numero_pregunta;
@@ -396,21 +396,21 @@ Str::macro('hes', function ($str) {
 /**
  * BOOLEAN OPTIONS
  */
-\HTML::macro('booleanOptions', function (PreguntaCabecera $question, $isSubQuestion = false) {
+\HTML::macro('booleanOptions', function (\PreguntaCabecera $question, $isSubQuestion = false) {
 
 	$out = '';
 
 	if ($isSubQuestion) {
-		$pregunta_padre    = PreguntaCabecera::select(array('id_pregunta_cabecera', 'numero_pregunta'))->whereIdPreguntaCabecera($question->id_pregunta_padre)->first(array('id_pregunta_cabecera',
+		$pregunta_padre    = \PreguntaCabecera::select(array('id_pregunta_cabecera', 'numero_pregunta'))->whereIdPreguntaCabecera($question->id_pregunta_padre)->first(array('id_pregunta_cabecera',
 		                                                                                                                                                                    'numero_pregunta'));
 		$numero_pregunta   = $pregunta_padre->numero_pregunta;
 		$id_pregunta_padre = $pregunta_padre->id_pregunta_cabecera;
-		$out .= '<h5>' . Str::hes($question->descripcion_1) . '</h5>';
+		$out .= '<h5>' . \Str::hes($question->descripcion_1) . '</h5>';
 	}
 	else {
 		$numero_pregunta   = $question->numero_pregunta;
 		$id_pregunta_padre = $question->id_pregunta_cabecera;
-		$out .= '<h4>' . Str::hes($numero_pregunta . '.- ' . $question->descripcion_1) . '</h4>';
+		$out .= '<h4>' . \Str::hes($numero_pregunta . '.- ' . $question->descripcion_1) . '</h4>';
 	}
 
 	//Debugbar::addMessage('BOOLEANOPTION | ID PREGUNTA: ' . $id_pregunta_padre . ' NUMERO PREGUNTA: ' . $numero_pregunta);
@@ -420,14 +420,14 @@ Str::macro('hes', function ($str) {
 					<thead class="text-center">
 					<tr>
 						<td style="width: 33%;"></td>
-						<td style="width: 33%;">' . Str::hes(Lang::get('messages.yes')) . '</td>
-						<td style="width: 33%;">' . Str::hes(Lang::get('messages.no')) . '</td>
+						<td style="width: 33%;">' . \Str::hes(\Lang::get('messages.yes')) . '</td>
+						<td style="width: 33%;">' . \Str::hes(\Lang::get('messages.no')) . '</td>
 					</tr>
 					</thead>
 					<tbody class=" text-center">
 					<tr class="">
-						<td style="width: 33%;" class="text-left vertical-align"><label class="control-label">' . Str::hes('Opción') . '</label></td>
-						<td style="width: 33%;"><input type="radio" name="question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[text]" value="SI" data-fv-notempty data-fv-notempty-message="' . Lang::get('validation.required', ['attribute' => '']) . '"></td>
+						<td style="width: 33%;" class="text-left vertical-align"><label class="control-label">' . \Str::hes('Opción') . '</label></td>
+						<td style="width: 33%;"><input type="radio" name="question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[text]" value="SI" data-fv-notempty data-fv-notempty-message="' . \Lang::get('validation.required', ['attribute' => '']) . '"></td>
 						<td style="width: 33%;"><input type="radio" name="question_' . $numero_pregunta . '_' . $id_pregunta_padre . '[text]" value="NO"></td>
 					</tr>
 					</tbody>
@@ -441,7 +441,7 @@ Str::macro('hes', function ($str) {
 /**
  * CREATE ALL QUESTIONS
  */
-\HTML::macro('createQuestions', function (PreguntaCabecera $question, $isSubQuestion = false) {
+\HTML::macro('createQuestions', function (\PreguntaCabecera $question, $isSubQuestion = false) {
 	$out = '';
 
 	if (!$isSubQuestion) {
@@ -477,7 +477,7 @@ Str::macro('hes', function ($str) {
 	}
 
 	//$subQuestion = PreguntaCabecera::select(array('id_pregunta_cabecera', 'descripcion_1', 'numero_pregunta', 'id_pregunta_padre', 'id_tipo_respuesta'))->whereIdPreguntaPadre($question->id_pregunta_cabecera)->whereNumeroPregunta(null)->first(array('id_pregunta_cabecera', 'descripcion_1', 'numero_pregunta', 'id_pregunta_padre', 'id_tipo_respuesta'));
-	$subQuestion = PreguntaCabecera::whereIdPreguntaPadre($question->id_pregunta_cabecera)->whereNumeroPregunta(null)->first();
+	$subQuestion = \PreguntaCabecera::whereIdPreguntaPadre($question->id_pregunta_cabecera)->whereNumeroPregunta(null)->first();
 
 	if (!is_null($subQuestion)) {
 		$out .= \HTML::createQuestions($subQuestion, true);
@@ -543,15 +543,15 @@ Str::macro('hes', function ($str) {
 	$count = 1;
 	foreach ($questions as $key => $question) {
 		if ($question->id_pregunta_padre === null) {
-			$name = $count++ . '.- ' . Categoria::find($question->id_categoria)->descripcion_categoria;
-			$out .= Form::generateInput($name, $question, $readonly);
+			$name = $count++ . '.- ' . \Categoria::find($question->id_categoria)->descripcion_categoria;
+			$out .= \Form::generateInput($name, $question, $readonly);
 		}
 	}
 
 	return $out;
 });
 
-Form::macro('generateInput', function ($title, PreguntaCabecera $question, $readonly = false) {
+\Form::macro('generateInput', function ($title, \PreguntaCabecera $question, $readonly = false) {
 	$ro = '';
 
 	if ($readonly) {
@@ -559,8 +559,8 @@ Form::macro('generateInput', function ($title, PreguntaCabecera $question, $read
 	}
 
 	$out = '<div class="form-group">';
-	$out .= Form::label('question' . $question->id_pregunta_cabecera, $title);
-	$out .= Form::text('question' . $question->id_pregunta_cabecera, trim($question->descripcion_1), ['class' => 'form-control', $ro]);
+	$out .= \Form::label('question' . $question->id_pregunta_cabecera, $title);
+	$out .= \Form::text('question' . $question->id_pregunta_cabecera, trim($question->descripcion_1), ['class' => 'form-control', $ro]);
 	$out .= '</div>';
 
 	return $out;

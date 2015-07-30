@@ -3,18 +3,18 @@
 /**
  * Url
  *
- * @property integer        $id
- * @property string         $given
- * @property string         $url
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property integer $id 
+ * @property string $given 
+ * @property string $url 
+ * @property string $params 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
  * @method static \Illuminate\Database\Query\Builder|\Url whereId($value)
  * @method static \Illuminate\Database\Query\Builder|\Url whereGiven($value)
  * @method static \Illuminate\Database\Query\Builder|\Url whereUrl($value)
+ * @method static \Illuminate\Database\Query\Builder|\Url whereParams($value)
  * @method static \Illuminate\Database\Query\Builder|\Url whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Url whereUpdatedAt($value)
- * @property string $params 
- * @method static \Illuminate\Database\Query\Builder|\Url whereParams($value)
  */
 class Url extends Eloquent
 {

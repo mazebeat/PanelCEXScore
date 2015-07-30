@@ -36,7 +36,7 @@
 					</h1>
 					<ol class="breadcrumb">
 						@section('breadcrumb')
-							<li><i class="fa fa-dashboard"></i> <a href="{{ url('admin/login') }}">Inicio</a></li>
+							<li><i class="fa fa-home fa-fw"></i><a href="{{ url('admin/login') }}">Inicio</a></li>
 						@show
 					</ol>
 				</article>

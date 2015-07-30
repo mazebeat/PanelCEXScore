@@ -3,17 +3,19 @@
 /**
  * Plan
  *
- * @property integer        $id_plan
- * @property string         $descripcion_plan
- * @property integer        $id_estado
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property integer $id_plan 
+ * @property string $descripcion_plan 
+ * @property integer $max_respuestas 
+ * @property integer $id_estado 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Cliente[] $clientes 
  * @method static \Illuminate\Database\Query\Builder|\Plan whereIdPlan($value)
  * @method static \Illuminate\Database\Query\Builder|\Plan whereDescripcionPlan($value)
+ * @method static \Illuminate\Database\Query\Builder|\Plan whereMaxRespuestas($value)
  * @method static \Illuminate\Database\Query\Builder|\Plan whereIdEstado($value)
  * @method static \Illuminate\Database\Query\Builder|\Plan whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Plan whereUpdatedAt($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\Cliente[] $clientes 
  */
 class Plan extends \Eloquent
 {

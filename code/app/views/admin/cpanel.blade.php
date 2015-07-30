@@ -4,11 +4,11 @@
 @endsection
 
 @section('page-title')
+	<i class="fa fa-home fa-fw"></i>Inicio
 @endsection
 
 @section('breadcrumb')
 	@parent
-	<li class="active"></li>
 @endsection
 
 @section('content')

@@ -8,40 +8,39 @@ use Illuminate\Auth\UserTrait;
 /**
  * Cliente
  *
- * @property integer                                                     $id_cliente
- * @property string                                                      $rut_cliente
- * @property string                                                      $nombre_cliente
- * @property string                                                      $fono_cliente
- * @property string                                                      $correo_cliente
- * @property string                                                      $direccion_cliente
- * @property integer                                                     $id_estado
- * @property integer                                                     $id_ciudad
- * @property integer                                                     $id_tipo_cliente
- * @property integer                                                     $id_sector
- * @property integer                                                     $id_plan
- * @property \Carbon\Carbon                                              $created_at
- * @property \Carbon\Carbon                                              $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Apariencia[] $apariencias
- * @property-read \Sector                                                $sector
- * @property-read \Illuminate\Database\Eloquent\Collection|\Respuesta[]  $respuestas
+ * @property integer $id_cliente 
+ * @property string $rut_cliente 
+ * @property string $nombre_cliente 
+ * @property string $fono_cliente 
+ * @property string $correo_cliente 
+ * @property string $direccion_cliente 
+ * @property integer $id_ciudad 
+ * @property integer $id_sector 
+ * @property integer $id_plan 
+ * @property integer $id_encuesta 
+ * @property \Carbon\Carbon $created_at 
+ * @property integer $id_estado 
+ * @property \Carbon\Carbon $updated_at 
+ * @property-read mixed $is_admin 
+ * @property-read \Encuesta $encuesta 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Apariencia[] $apariencias 
+ * @property-read \Sector $sector 
+ * @property-read \Plan $plan 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Respuesta[] $respuestas 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\User[] $usuarios 
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereIdCliente($value)
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereRutCliente($value)
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereNombreCliente($value)
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereFonoCliente($value)
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereCorreoCliente($value)
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereDireccionCliente($value)
- * @method static \Illuminate\Database\Query\Builder|\Cliente whereIdEstado($value)
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereIdCiudad($value)
- * @method static \Illuminate\Database\Query\Builder|\Cliente whereIdTipoCliente($value)
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereIdSector($value)
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereIdPlan($value)
- * @method static \Illuminate\Database\Query\Builder|\Cliente whereCreatedAt($value)
- * @method static \Illuminate\Database\Query\Builder|\Cliente whereUpdatedAt($value)
- * @property integer $id_encuesta 
- * @property-read mixed $is_admin 
- * @property-read \Encuesta $encuesta 
- * @property-read \Plan $plan 
  * @method static \Illuminate\Database\Query\Builder|\Cliente whereIdEncuesta($value)
+ * @method static \Illuminate\Database\Query\Builder|\Cliente whereCreatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\Cliente whereIdEstado($value)
+ * @method static \Illuminate\Database\Query\Builder|\Cliente whereUpdatedAt($value)
  */
 class Cliente extends \Eloquent implements UserInterface, RemindableInterface
 {

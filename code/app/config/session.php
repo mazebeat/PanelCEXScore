@@ -89,7 +89,7 @@ return array(
 	|
 	*/
 
-	'cookie'          => 'laravel_session',
+	'cookie'          => 'panelexscore_',
 	/*
 	|--------------------------------------------------------------------------
 	| Session Cookie Path

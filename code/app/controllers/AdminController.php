@@ -1,5 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 use SebastianBergmann\Exporter\Exception;
 
 class AdminController extends \ApiController
@@ -12,7 +15,6 @@ class AdminController extends \ApiController
 		parent::__construct();
 		$this->beforeFilter('csrf');
 	}
-
 
 	/**
 	 * Display a listing of the resource.
@@ -102,34 +104,112 @@ class AdminController extends \ApiController
 		return Redirect::to('admin/login');
 	}
 
+	/**
+	 * @return \Illuminate\View\View
+	 */
 	public function cpanel()
 	{
 		return View::make('admin.cpanel');
 	}
 
+	/**
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function modifySurvey()
 	{
 		$inputs    = Input::except(['_token', 'survey', 'plan']);
+		$valid     = static::createBasicRules($inputs);
+		$validator = Validator::make(Input::all(), $valid['rules'], $valid['messages']);
+
+		if ($validator->fails()) {
+			return Redirect::back()->withErrors($validator)->withInput(Input::except('_token'));
+		}
+
 		$questions = Auth::user()->cliente->encuesta->preguntas;
-		//$questions  = Session::get('user_back')->cliente->encuesta->preguntas;
+		// $questions  = Session::get('user_back')->cliente->encuesta->preguntas;
 		$idencuesta = Crypt::decrypt(Input::get('survey'));
 		$idplan     = Crypt::decrypt(Input::get('plan'));
-		$x          = 1;
+		$x          = 0;
+
+		if ($idplan == 1) {
+			$errors = new MessageBag();
+			$errors->add('inesperado', 'No mantiene los privilegios para modificar.');
+
+			return Redirect::back()->withErrors($errors)->withInput(Input::except('_token'));
+		}
+
+		if (count($inputs) <= 0) {
+			$errors = new MessageBag();
+			$errors->add('inesperado', 'Cantidad de textos incorrecta.');
+
+			return Redirect::back()->withErrors($errors)->withInput(Input::except('_token'));
+		}
+
+		$ids = self::FilterQuestions($inputs);
+
+		foreach ($questions as $question) {
 
 
-		if ($idplan != 1 && count($inputs) > 0) {
-			for ($i = 0; $i < count($questions); $i++) {
+			if ($question->id_encuesta == $idencuesta && array_key_exists($question->id_pregunta_cabecera, $ids) && is_null($question->id_pregunta_padre)) {
+				$question->descripcion_1 = $ids[$question->id_pregunta_cabecera];
 
-				if ($questions[$i]->id_encuesta == $idencuesta && is_null($questions[$i]->id_pregunta_padre)) {
-					$questions[$i]->descripcion_1 = trim(e(Input::get('question' . $x)));
-					if ($questions[$i]->save()) {
-						$x++;
-					}
+				if ($question->save()) {
+					$x++;
 				}
 			}
 		}
 
+		if ($x != 4) {
+			$errors = new MessageBag();
+			$errors->add('inesperado', 'Error al procesar solicitud.');
+
+			return Redirect::back()->withErrors($errors)->withInput(Input::except('_token'));
+		}
+
 		return Redirect::to('admin/survey/load');
+	}
+
+	/**
+	 * @param null $inputs
+	 *
+	 * @return array
+	 */
+	public static function createBasicRules($inputs = null)
+	{
+		$rules    = [];
+		$messages = [];
+		$count    = 1;
+
+		if (!is_null($inputs)) {
+			foreach ($inputs as $key => $value) {
+				$rules[$key]                  = 'required';
+				$messages[$key . '.required'] = 'El texto en la pregunta ' . $count++ . ' es obligatorio.';
+			}
+		}
+
+		return array('rules' => $rules, 'messages' => $messages);
+	}
+
+	/**
+	 * @param $inputs
+	 * @param $ids
+	 *
+	 * @return mixed
+	 */
+	public static function FilterQuestions($inputs)
+	{
+		try {
+			foreach ($inputs as $key => $value) {
+				if (Str::startsWith($key, 'question')) {
+					$id       = (int)str_replace('question', '', $key);
+					$ids[$id] = $value;
+				}
+			}
+		} catch (Exception $ex) {
+			var_dump($ex->getMessage());
+		}
+
+		return $ids;
 	}
 
 	/**
@@ -141,8 +221,8 @@ class AdminController extends \ApiController
 		$client = Auth::user()->cliente;
 		//$client = Cliente::find(Session::get('idcliente_back'));
 		$plan = $client->plan;
-		if (!is_null($plan)) {
 
+		if (!is_null($plan)) {
 			$idplan = $plan->id_plan;
 			$survey = $client->encuesta;
 

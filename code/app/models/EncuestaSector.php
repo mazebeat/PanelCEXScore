@@ -3,11 +3,11 @@
 /**
  * EncuestaSector
  *
- * @property integer $id_encuesta_sector
- * @property integer $id_encuesta
- * @property integer $id_sector
- * @property \Carbon\Carbon $created_at
- * @property \Carbon\Carbon $updated_at
+ * @property integer $id_encuesta_sector 
+ * @property integer $id_encuesta 
+ * @property integer $id_sector 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
  * @method static \Illuminate\Database\Query\Builder|\EncuestaSector whereIdEncuestaSector($value)
  * @method static \Illuminate\Database\Query\Builder|\EncuestaSector whereIdEncuesta($value)
  * @method static \Illuminate\Database\Query\Builder|\EncuestaSector whereIdSector($value)

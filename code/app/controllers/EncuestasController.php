@@ -82,28 +82,36 @@ class EncuestasController extends \ApiController
 				else {
 					$error          = new stdClass();
 					$error->code    = 500;
-					$error->message = 'Canala no encontrado.';
+					$error->message = 'Canal no encontrado.';
 
 					return Redirect::to('survey/error')->with('error', $error);
 				}
 
 				$id = Crypt::decrypt($idcliente);
 
-				if (Cache::get('finish') && $id == Cache::get('idcliente')) {
-					return Redirect::to('survey/success');
+				if ($id == null) {
+					$error          = new stdClass();
+					$error->code    = 500;
+					$error->message = 'ID Cliente no encontrado.';
+
+					return Redirect::to('survey/error')->with('error', $error);
 				}
+
+				$client = Cliente::find($id);
+
+				//if (Cache::get('finish') && $id == Cache::get('idcliente')) {
+				//	return Redirect::to('survey/success');
+				//}
 
 				//if (Session::has('idcliente') && $id != Crypt::decrypt(Session::get('idcliente'))) {
 				Session::forget('theme');
 				Session::forget('survey');
-				Session::forget('idcliente');
+				Session::forget('cliente');
 				Cache::flush();
 				//}
 
-				$client = Cliente::find($id);
 
-				if ($client->first()->exists) {
-
+				if (!is_null($client) && $client->first()->exists) {
 					$plan = $client->plan;
 
 					if (!is_null($plan)) {
@@ -118,8 +126,8 @@ class EncuestasController extends \ApiController
 							Session::put('survey', $survey);
 						}
 
-						if (!Session::has('idcliente')) {
-							Session::put('idcliente', $idcliente);
+						if (!Session::has('client')) {
+							Session::put('client', $client);
 						}
 					}
 
@@ -147,69 +155,82 @@ class EncuestasController extends \ApiController
 	{
 		$inputs = Input::except('_token');
 
-		if (!Session::has('idcliente')) {
-			$errors = 'Cliente no identificado.';
+		try {
+			Debugbar::addMessage(Session::all(), 'info');
+			if (!Session::has('client')) {
+				$errors = 'Cliente no identificado.';
 
-			return Redirect::back()->withErrors($errors)->withInput($inputs);
-		}
-
-		if (!static::validateAnswers($inputs)) {
-			$errors = 'Debe contestar todas las preguntas.';
-
-			return Redirect::back()->withErrors($errors)->withInput($inputs);
-		}
-
-		$data = static::processAnswers($inputs);
-
-		if (is_null($data) && !static::objectHasProperty($data['answers'])) {
-			$errors = 'Error en la consulta.';
-
-			return Redirect::back()->withErrors($errors)->withInput($inputs);
-		}
-
-		$id_cliente = Crypt::decrypt(Session::get('idcliente'));
-		$client     = Cliente::find($id_cliente);
-		$survey     = Session::get('survey');
-
-		foreach ($data['answers'] as $key => $value) {
-			$respuesta                       = new Respuesta();
-			$respuesta->id_estado            = 1;
-			$respuesta->id_canal             = Crypt::decrypt(Session::get('canal'));
-			$respuesta->id_encuesta          = $survey->id_encuesta;
-			$respuesta->id_pregunta_cabecera = $value->id_pregunta_cabecera;
-			//$respuesta->id_pregunta_detalle  = 1;
-
-			$respuesta = $client->respuestas()->save($respuesta, ['ultima_respuesta' => Carbon::now(), 'id_estado' => 1]);
-
-			$respuestaDetalle = new RespuestaDetalle();
-			if (isset($value->value)) {
-				$respuestaDetalle->valor1 = $value->value;
+				//return Redirect::back()->withErrors($errors)->withInput($inputs);
 			}
-			else {
-				$respuestaDetalle->valor1 = null;
+
+			if (!static::validateAnswers($inputs)) {
+				$errors = 'Debe contestar todas las preguntas.';
+
+				return Redirect::back()->withErrors($errors)->withInput($inputs);
 			}
-			if (isset($value->text)) {
-				$respuestaDetalle->valor2 = $value->text;
+
+			$data = static::processAnswers($inputs);
+
+			if (is_null($data) && !static::objectHasProperty($data['answers'])) {
+				$errors = 'Error en la consulta.';
+
+				return Redirect::back()->withErrors($errors)->withInput($inputs);
 			}
-			else {
-				$respuestaDetalle->valor2 = null;
+
+			//$client = Session::get('client');
+			$client = Cliente::find(2);
+			$survey = $client->encuesta;
+			//$survey = Session::get('survey');
+			$canal = 5;
+			//$canal  = Session::get('canal');
+			//$canal  = Crypt::decrypt($canal);
+
+			foreach ($data['answers'] as $key => $value) {
+
+				// AGREGAR RELACION CON MOMENTO AL CUAL SE ESTA RESPONDIENDO
+				$respuesta                       = new Respuesta();
+				$respuesta->id_estado            = 1;
+				$respuesta->id_canal             = $canal;
+				$respuesta->id_encuesta          = $survey->id_encuesta;
+				$respuesta->id_cliente           = $client->id_cliente;
+				$respuesta->id_pregunta_cabecera = $value->id_pregunta_cabecera;
+
+				$respuesta = $client->respuestas()->save($respuesta, ['ultima_respuesta' => Carbon::now(), 'id_estado' => 1]);
+
+				$respuestaDetalle = new RespuestaDetalle();
+				if (isset($value->value)) {
+					$respuestaDetalle->valor1 = $value->value;
+				}
+				else {
+					$respuestaDetalle->valor1 = null;
+				}
+				if (isset($value->text)) {
+					$respuestaDetalle->valor2 = $value->text;
+				}
+				else {
+					$respuestaDetalle->valor2 = null;
+				}
+				$respuestaDetalle->id_respuesta = $respuesta->id_respuesta;
+				$respuestaDetalle->save();
 			}
-			$respuestaDetalle->id_respuesta = $respuesta->id_respuesta;
-			$respuestaDetalle->save();
-		}
-		if (count($data['user']) && static::objectHasProperty($data['user'])) {
-			$value                 = $data['user'];
-			$user                  = new Usuario();
-			$user->nombre_usuario  = $value->name;
-			$user->edad_usuario    = $value->age;
-			$user->genero_cliente  = $value->gender;
-			$user->correo_cliente  = $value->email;
-			$user->id_tipo_usuario = 3;
-			$user->id_cliente      = Crypt::decrypt(Session::get('idcliente'));
-			if (isset($value->wish_email) && (int)$value->wish_email == 1) {
-				$user->desea_correo_cliente = 'NO';
+
+			if (count($data['user']) && static::objectHasProperty($data['user'])) {
+				$value                 = $data['user'];
+				$user                  = new Usuario();
+				$user->nombre_usuario  = $value->name;
+				$user->edad_usuario    = $value->age;
+				$user->genero_cliente  = $value->gender;
+				$user->correo_cliente  = $value->email;
+				$user->id_tipo_usuario = 3;
+
+				$user->id_cliente = $client->id_cliente;
+				if (isset($value->wish_email) && (int)$value->wish_email == 1) {
+					$user->desea_correo_cliente = 'NO';
+				}
+				$user->save();
 			}
-			$user->save();
+		} catch (Exception $e) {
+			die($e->getMessage());
 		}
 
 		return Redirect::to('survey/success');
@@ -290,7 +311,12 @@ class EncuestasController extends \ApiController
 								$tmp[$k] = (int)$v;
 							}
 							else {
-								$tmp[$k] = $v;
+								if (is_null($v) || empty($value)) {
+									$tmp[$k] = null;
+								}
+								else {
+									$tmp[$k] = $v;
+								}
 							}
 						}
 					}

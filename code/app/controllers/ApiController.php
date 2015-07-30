@@ -28,6 +28,9 @@ class ApiController extends \BaseController
 	 */
 	public function generateMessage()
 	{
+		$theme = null;
+		$survey = null;
+
 		if (!Session::has('message') || !is_object(Session::get('message'))) {
 			$message           = new stdClass();
 			$message->title    = Str::hes('&iexcl;Agradecemos sus Respuestas&#33;');
@@ -52,7 +55,9 @@ class ApiController extends \BaseController
 				$survey = Cache::get('survey');
 			}
 			else {
-				return Redirect::to('survey/error');
+				$theme = Apariencia::find(Config::get('default.idapariencia'));
+				//dd(Cache::has('theme') && Cache::has('survey'));
+				//return Redirect::to('survey/error');
 			}
 		}
 
@@ -72,7 +77,7 @@ class ApiController extends \BaseController
 			if (!Session::has('error') || !is_object(Session::get('error'))) {
 				$error          = new stdClass();
 				$error->code    = 401;
-				$error->message = 'Cliente no encontrado.';
+				$error->message = 'Error Inesperado.';
 			}
 			else {
 				$error = Session::get('error');
@@ -102,6 +107,11 @@ class ApiController extends \BaseController
 		}
 	}
 
+	/**
+	 * @param \SebastianBergmann\Exporter\Exception $e
+	 *
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	function throwError(Exception $e)
 	{
 		if (!Config::get('app.debug')) {

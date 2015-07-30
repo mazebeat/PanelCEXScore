@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ExcepcionCliente
+ * ExcepcionUsuario
  *
  * @property integer $id_excepcion_usuario 
  * @property integer $id_excepcion 

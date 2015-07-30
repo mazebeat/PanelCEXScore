@@ -8,8 +8,9 @@
 @endsection
 
 @section('breadcrumb')
-	<li><a href="{{ url('admin/shorten') }}">Shorten</a></li>
-	<li>Generate</li>
+	@parent
+	<li>Shorten</li>
+	<li><a href="{{ url('admin/shorten/generate') }}">Resultado</a></li>
 @endsection
 
 @section('content')

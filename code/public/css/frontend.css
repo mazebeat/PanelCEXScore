@@ -149,7 +149,7 @@ header.user, main.user, footer.user {
 }
 
 header.user {
-
+    padding-bottom:  15px;
 }
 
 footer {

@@ -3,26 +3,26 @@
 /**
  * Respuesta
  *
- * @property integer                                                  $id_respuesta
- * @property string                                                   $fecha
- * @property integer                                                  $id_estado
- * @property integer                                                  $id_canal
- * @property integer                                                  $id_encuesta
- * @property integer                                                  $id_pregunta_cabecera
- * @property integer                                                  $id_pregunta_detalle
- * @property \Carbon\Carbon                                           $created_at
- * @property \Carbon\Carbon                                           $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Cliente[] $clientes
+ * @property integer $id_respuesta 
+ * @property integer $id_pregunta_cabecera 
+ * @property integer $id_encuesta 
+ * @property integer $id_canal 
+ * @property integer $id_cliente 
+ * @property integer $id_cliente_respuesta 
+ * @property integer $id_estado 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Cliente[] $clientes 
+ * @property-read \RespuestaDetalle $detalle 
  * @method static \Illuminate\Database\Query\Builder|\Respuesta whereIdRespuesta($value)
- * @method static \Illuminate\Database\Query\Builder|\Respuesta whereFecha($value)
- * @method static \Illuminate\Database\Query\Builder|\Respuesta whereIdEstado($value)
- * @method static \Illuminate\Database\Query\Builder|\Respuesta whereIdCanal($value)
- * @method static \Illuminate\Database\Query\Builder|\Respuesta whereIdEncuesta($value)
  * @method static \Illuminate\Database\Query\Builder|\Respuesta whereIdPreguntaCabecera($value)
- * @method static \Illuminate\Database\Query\Builder|\Respuesta whereIdPreguntaDetalle($value)
+ * @method static \Illuminate\Database\Query\Builder|\Respuesta whereIdEncuesta($value)
+ * @method static \Illuminate\Database\Query\Builder|\Respuesta whereIdCanal($value)
+ * @method static \Illuminate\Database\Query\Builder|\Respuesta whereIdCliente($value)
+ * @method static \Illuminate\Database\Query\Builder|\Respuesta whereIdClienteRespuesta($value)
+ * @method static \Illuminate\Database\Query\Builder|\Respuesta whereIdEstado($value)
  * @method static \Illuminate\Database\Query\Builder|\Respuesta whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Respuesta whereUpdatedAt($value)
- * @property-read \RespuestaDetalle $detalle 
  */
 class Respuesta extends \Eloquent
 {

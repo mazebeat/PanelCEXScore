@@ -3,27 +3,23 @@
 /**
  * Encuesta
  *
- * @property integer                                                           $id_encuesta
- * @property string                                                            $titulo
- * @property string                                                            $slogan
- * @property string                                                            $description
- * @property string                                                            $fecha_creacion
- * @property string                                                            $fecha_modificacion
- * @property integer                                                           $id_estado
- * @property \Carbon\Carbon                                                    $created_at
- * @property \Carbon\Carbon                                                    $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection|\Sector[]           $sectores
- * @property-read \Illuminate\Database\Eloquent\Collection|\PreguntaCabecera[] $preguntas
+ * @property integer $id_encuesta 
+ * @property string $titulo 
+ * @property string $slogan 
+ * @property string $description 
+ * @property \Carbon\Carbon $created_at 
+ * @property \Carbon\Carbon $updated_at 
+ * @property integer $id_estado 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Cliente[] $clientes 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Sector[] $sectores 
+ * @property-read \Illuminate\Database\Eloquent\Collection|\PreguntaCabecera[] $preguntas 
  * @method static \Illuminate\Database\Query\Builder|\Encuesta whereIdEncuesta($value)
  * @method static \Illuminate\Database\Query\Builder|\Encuesta whereTitulo($value)
  * @method static \Illuminate\Database\Query\Builder|\Encuesta whereSlogan($value)
  * @method static \Illuminate\Database\Query\Builder|\Encuesta whereDescription($value)
- * @method static \Illuminate\Database\Query\Builder|\Encuesta whereFechaCreacion($value)
- * @method static \Illuminate\Database\Query\Builder|\Encuesta whereFechaModificacion($value)
- * @method static \Illuminate\Database\Query\Builder|\Encuesta whereIdEstado($value)
  * @method static \Illuminate\Database\Query\Builder|\Encuesta whereCreatedAt($value)
  * @method static \Illuminate\Database\Query\Builder|\Encuesta whereUpdatedAt($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\Cliente[] $clientes 
+ * @method static \Illuminate\Database\Query\Builder|\Encuesta whereIdEstado($value)
  */
 class Encuesta extends \Eloquent
 {
